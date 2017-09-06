@@ -1,8 +1,9 @@
 
 var chai = require('chai')
 var should = chai.should()
+var axios = require('./axios_config')
 
-describe(`POST /learning`, () => {
+describe(`POST /learning > TensorFlow endPoint`, () => {
   var token
   var userID
   var userLogin = {
