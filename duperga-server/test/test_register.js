@@ -1,54 +1,60 @@
 var chai = require('chai')
-var axios = require('axios')
+var axios = require('./axios_config')
 
 var should = chai.should()
-axios.defaults.baseURL = 'http://localhost:3000/api'
 
-describe('GET /', () => {
-  it(`Should response 'pong' !`, (done) => {
-    axios.get(`/`)
-    .then(({ data }) => {
-      data.should.equal('pong!')
-      done()
-    })
-  })
-
-  it(`Should not response 'routes not found' !`, (done) => {
-    axios.get(`/`)
-    .then(({ data }) => {
-      data.should.not.equal('routes not found')
-      done()
-    })
-  })
-
-})
+var newUser = {
+  email: 'fajar@gmail.com',
+  password: 'fajar'
+}
 
 describe('POST /register', () => {
 
-  after((done) => {
-    axios.delete('/users/clear')
-  })
+  // afterEach((done) => {
+  //   axios.delete('/users/clear')
+  //   .then(resp => {
+  //     console.log(resp)
+  //   })
+  //   .catch(err => {
+  //     console.log(err)
+  //   })
+  // })
 
-  it(`Response should be an object`, (done) => {
-    axios.post(`/users/register`, {
-      email: 'fajar@gmail.com',
-      password: 'fajar'
-    })
+  it(`Should create a user`, (done) => {
+    axios.post(`/users/register`, newUser)
     .then(({ data }) => {
-      data.should.be.an('object')
+      console.log(data)
+      data.should.equal('user has been created')
+      done()
+    })
+    .catch(err => {
+      err.response.data.status.should.not.equal(404)
       done()
     })
   })
 
-  it(`Response should property username`, (done) => {
-    axios.post(`/users/register`, {
-      email: 'fajar@gmail.com',
-      password: 'fajar'
-    })
+  it(`Response should not 'user registered'`, (done) => {
+    axios.post(`/users/register`, newUser)
     .then(({ data }) => {
-      data.should.have.property('username')
+      data.should.not.equal('user registered')
       done()
     })
-    .
+    .catch(err => {
+      err.response.data.status.should.not.equal(404)
+      done()
+    })
+  })
+
+  it(`response status should '404'`, (done) => {
+    axios.post(`/users/blabla`, newUser)
+    .then(({data}) => {
+      console.log(data)
+    })
+    .catch(err => {
+      err.response.data.status.should.equal(404)
+      done()
+    })
   })
 })
+
+module.exports = axios;
