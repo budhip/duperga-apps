@@ -7,7 +7,8 @@ var userSchema = new Schema({
     type: String
   },
   email: {
-    type: String
+    type: String,
+    unique: [true, 'user already exist']
   },
   password: {
     type: String
