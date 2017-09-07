@@ -5,19 +5,11 @@ var should = chai.should()
 
 
 describe('GET /wishlist', () => {
-
-  var wishlistID
-  var token
-  var userID
-  var userLogin = {
+  let token
+  let userID
+  let userLogin = {
     email: 'fajar@gmail.com',
     password: 'fajar'
-  }
-
-  var tokenHeader = {
-    headers: {
-      token: token
-    }
   }
 
   before(done => {
@@ -51,7 +43,11 @@ describe('GET /wishlist', () => {
   })
 
   before(done => {
-    axios.post('/wishlist/seed', newWishlist , tokenHeader)
+    axios.post('/wishlist/seed', newWishlist , {
+      headers: {
+        token: token
+      }
+    })
     .then((resp) => {
       wishlistID = resp.data._id
       done()
@@ -74,86 +70,74 @@ describe('GET /wishlist', () => {
     })
   })
 
-  describe(`GET /wishlist`, () => {
-    it(`should have 5 wishlist`, (done) => {
-      axios.get(`/wishlist`)
-      .then((resp) => {
-        resp.data.length.should.equal(5)
-        done()
-      })
-      .catch(err => {
-        err.response.data.status.should.not.equal(404)
-        done()
-      })
+  it(`should have 5 wishlist`, (done) => {
+    axios.get(`/wishlist`)
+    .then((resp) => {
+      resp.data.length.should.equal(5)
+      done()
     })
-
-    it(`should not more than 5 wishlist`, (done) => {
-      axios.get(`/wishlist`)
-      .then((resp) => {
-        resp.data.length.should.not.equal(7)
-        done()
-      })
-      .catch(err => {
-        err.response.data.status.should.not.equal(404)
-        done()
-      })
+    .catch(err => {
+      err.response.data.status.should.not.equal(404)
+      done()
     })
+  })
 
-    it(`second data should have property 'userID'`, (done) => {
-      axios.get(`/wishlist`)
-      .then((resp) => {
-        resp.data[0].name.should.have.property('userID')
-        done()
-      })
-      .catch(err => {
-        err.response.data.status.should.not.equal(404)
-        done()
-      })
+  it(`should not more than 5 wishlist`, (done) => {
+    axios.get(`/wishlist`)
+    .then((resp) => {
+      resp.data.length.should.not.equal(7)
+      done()
     })
-
-    it(`first data name should equal to 'Toyota avanza'`, (done) => {
-      axios.get(`/wishlist`)
-      .then((resp) => {
-        resp.data[0].toLowerCase().should.equal('toyota avanza')
-        done()
-      })
-      .catch(err => {
-        err.response.data.status.should.not.equal(404)
-        done()
-      })
+    .catch(err => {
+      err.response.data.status.should.not.equal(404)
+      done()
     })
+  })
 
-    it(`Should get response 404`, (done) => {
-      axios.get('/wish')
-      .then(resp => {
-        resp.data.should.not.exist
-      })
-      .catch(err => {
-        err.response.data.status.should.equal(404)
-      })
+  it(`second data should have property 'userID'`, (done) => {
+    axios.get(`/wishlist`)
+    .then((resp) => {
+      resp.data[0].name.should.have.property('userID')
+      done()
     })
+    .catch(err => {
+      err.response.data.status.should.not.equal(404)
+      done()
+    })
+  })
 
+  it(`first data name should equal to 'Toyota avanza'`, (done) => {
+    axios.get(`/wishlist`)
+    .then((resp) => {
+      resp.data[0].toLowerCase().should.equal('toyota avanza')
+      done()
+    })
+    .catch(err => {
+      err.response.data.status.should.not.equal(404)
+      done()
+    })
+  })
+
+  it(`Should get response 404`, (done) => {
+    axios.get('/wish')
+    .then(resp => {
+      resp.data.should.not.exist
+    })
+    .catch(err => {
+      err.response.data.status.should.equal(404)
+    })
   })
 
 })
 
-describe('GET /wishlist/:userID', () => {
-  var wishlistID
-  var token
-  var userID
-  var userLogin = {
+
+describe('GET /wishlist/:wishlistID', () => {
+  let wishlistID
+  let token
+  let userID
+  let userLogin = {
     email: 'fajar@gmail.com',
     password: 'fajar'
-  }
-
-  var tokenHeader = {
-    headers: {
-      token: token
-    }
-  }
-
-  var tensor = {
-    data: data
   }
 
   before(done => {
@@ -199,7 +183,11 @@ describe('GET /wishlist/:userID', () => {
   })
 
   it(`Should be an object and have _id property`, done => {
-    axios.get(`/wishlist/${wishlistID}`, tensor, tokenHeader)
+    axios.get(`/wishlist/${wishlistID}`, tensor, {
+      headers: {
+        token: token
+      }
+    })
     .then(resp => {
       resp.data.should.have.property('_id')
       resp.data.should.be.an('object')
@@ -212,7 +200,11 @@ describe('GET /wishlist/:userID', () => {
   })
 
   it(`Should not an array`, done => {
-    axios.get(`/wishlist/${wishlistID}`, tensor, tokenHeader)
+    axios.get(`/wishlist/${wishlistID}`, tensor, {
+      headers: {
+        token: token
+      }
+    })
     .then(resp => {
       resp.data.should.not.be.an('array')
       done()
@@ -224,7 +216,11 @@ describe('GET /wishlist/:userID', () => {
   })
 
   it(`Should not an array`, done => {
-    axios.get(`/wishlist/${wishlistID}`, tensor, tokenHeader)
+    axios.get(`/wishlist/${wishlistID}`, tensor, {
+      headers: {
+        token: token
+      }
+    })
     .then(resp => {
       resp.data.should.not.be.an('array')
       done()

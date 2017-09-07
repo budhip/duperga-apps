@@ -3,28 +3,29 @@ var axios = require('./axios_config')
 
 var should = chai.should()
 
-var newUser = {
-  email: 'fajar@gmail.com',
-  password: 'fajar'
-}
 
 describe('POST /register', () => {
+  var newUser = {
+    name: 'fajar',
+    email: 'fajar@gmail.com',
+    password: 'fajar'
+  }
 
-  // afterEach((done) => {
-  //   axios.delete('/users/clear')
-  //   .then(resp => {
-  //     console.log(resp)
-  //   })
-  //   .catch(err => {
-  //     console.log(err)
-  //   })
-  // })
+  after((done) => {
+    axios.delete('/users/clear')
+    .then(resp => {
+      console.log(resp)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  })
 
-  it(`Should create a user`, (done) => {
+  it(`Should create a user with name 'fajar'`, (done) => {
     axios.post(`/users/register`, newUser)
-    .then(({ data }) => {
+    .then( resp => {
       console.log(data)
-      data.should.equal('user has been created')
+      resp.data.name.should.equal('fajar')
       done()
     })
     .catch(err => {
@@ -33,10 +34,10 @@ describe('POST /register', () => {
     })
   })
 
-  it(`Response should not 'user registered'`, (done) => {
+  it(`Response should 'user registered'`, (done) => {
     axios.post(`/users/register`, newUser)
-    .then(({ data }) => {
-      data.should.not.equal('user registered')
+    .then(resp => {
+      resp.data.should.equal('user registered')
       done()
     })
     .catch(err => {
@@ -54,7 +55,8 @@ describe('POST /register', () => {
       err.response.data.status.should.equal(404)
       done()
     })
-  })
+  })  
+
 })
 
 module.exports = axios;

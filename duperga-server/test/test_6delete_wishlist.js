@@ -9,12 +9,6 @@ describe('DELETE /wishlist/:wishlistID', () => {
   var wishlistID
   var token
 
-  var tokenHeader = {
-    headers: {
-      token: token
-    }
-  }
-
   var newWishlist = {
     name: 'Honda Mobilio',
     budget: 50000000,
@@ -77,7 +71,11 @@ describe('DELETE /wishlist/:wishlistID', () => {
   })
 
   it(`wishlist deleted id should ${wishlistID}`, (done) => {
-    axios.delete(`/wishlist/${wishlistID}`, tokenHeader)
+    axios.delete(`/wishlist/${wishlistID}`, {
+      headers: {
+        token: token
+      }
+    })
     .then((resp) => {
       resp.data._id.should.equal(wishlistID)
       done()
@@ -89,7 +87,11 @@ describe('DELETE /wishlist/:wishlistID', () => {
   })
 
   it(`wishlist deleted id should not 123`, (done) => {
-    axios.delete(`/wishlist/${wishlistID}`, tokenHeader)
+    axios.delete(`/wishlist/${wishlistID}`, {
+      headers: {
+        token: token
+      }
+    })
     .then((resp) => {
       resp.data.id.should.not.equal(123)
       done()
@@ -101,7 +103,11 @@ describe('DELETE /wishlist/:wishlistID', () => {
   })
 
   it(`Should give status 500`, (done) => {
-    axios.delete(`/wishlist/wrongID`, tokenHeader)
+    axios.delete(`/wishlist/wrongID`, {
+      headers: {
+        token: token
+      }
+    })
     .then((resp) => {
       resp.data.should.not.exist
       done()
@@ -113,7 +119,11 @@ describe('DELETE /wishlist/:wishlistID', () => {
   })
 
   it(`Should give status 404`, (done) => {
-    axios.delete(`/wishlist/${wishlistID}`, tokenHeader)
+    axios.delete(`/wishlist/${wishlistID}`, {
+      headers: {
+        token: token
+      }
+    })
     .then((resp) => {
       resp.data.should.not.exist
       done()
@@ -125,7 +135,11 @@ describe('DELETE /wishlist/:wishlistID', () => {
   })
 
   it(`response data should have complete property`, (done) => {
-    axios.delete(`/wishlist/${wishlistID}`, tokenHeader)
+    axios.delete(`/wishlist/${wishlistID}`, {
+      headers: {
+        token: token
+      }
+    })
     .then((resp) => {
       resp.data.should.have.property('name')
       resp.data.should.have.property('budget')

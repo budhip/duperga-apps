@@ -5,6 +5,7 @@ var should = chai.should()
 
 describe('PUT /wishlist/:wishlistID', () => {
   var wishlistID
+  var token
 
   var newWishlist = {
     name: 'Honda Mobilio',
@@ -13,6 +14,20 @@ describe('PUT /wishlist/:wishlistID', () => {
     category: 'Car'
   }
 
+  // login first
+  before(done => {
+    axios.post(`/login`, userLogin)
+    .then((resp) => {
+      token = resp.data.token
+      done()
+    })
+    .catch(err => {
+      err.response.data.status.should.not.equal(404)
+      done()
+    })
+  })
+
+  // create wishlist
   before(done => {
     axios.post('/wishlist', newWishlist)
     .then((resp) => {
@@ -25,6 +40,7 @@ describe('PUT /wishlist/:wishlistID', () => {
     })
   })
 
+  // clear all wishlist
   after(done => {
     axios.delete('/wishlist/clear')
     .then(resp => {
@@ -54,6 +70,10 @@ describe('PUT /wishlist/:wishlistID', () => {
   it(`name response should change to 'honda jazz'`, (done) => {
     axios.put(`/wishlist/${wishlistID}`, {
       name: 'honda jazz'
+    }, {
+      headers: {
+        token: token
+      }
     })
     .then((resp) => {
       resp.data.name.should.equal('honda jazz')
@@ -68,6 +88,10 @@ describe('PUT /wishlist/:wishlistID', () => {
   it(`name response should not change to 'honda jazz'`, (done) => {
     axios.put(`/wishlist/${wishlistID}`, {
       names: 'honda vario'
+    }, {
+      headers: {
+        token: token
+      }
     })
     .then((resp) => {
       resp.data.name.should.not.equal('honda vario')
@@ -79,7 +103,44 @@ describe('PUT /wishlist/:wishlistID', () => {
     })
   })
 
-  it(`response have status 404 `, (done) => {
+  it(`response have status 404 because it's don't have right end point`, (done) => {
+    axios.put(`/wishlis/${wishlistID}`, {
+      name: 'honda vario'
+    }, {
+      headers: {
+        token: token
+      }
+    })
+    .then((resp) => {
+      resp.data.should.not.exist
+      done()
+    })
+    .catch(err => {
+      err.response.data.status.should.equal(404)
+      done()
+    })
+  })
+
+  it(`response should return 'you are not authorized' when update because of wrong token`, done => {
+    axios.put(`/wishlist/${wishlistID}`, {
+      name: 'honda vario'
+    }, {
+      headers: {
+        token: token
+      }
+    })
+    .then((resp) => {
+      resp.data.should.not.exist
+      done()
+    })
+    .catch(err => {
+      err.response.data.status.should.equal(500)
+      err.response.data.message.should.equal('you are not authorized')
+      done()
+    })
+  })
+
+  it(`response should return 'you must login first' when update because token was not exist`, done => {
     axios.put(`/wishlist/${wishlistID}`, {
       name: 'honda vario'
     })
@@ -88,7 +149,8 @@ describe('PUT /wishlist/:wishlistID', () => {
       done()
     })
     .catch(err => {
-      err.response.data.status.should.equal(404)
+      err.response.data.status.should.equal(500)
+      err.response.data.message.should.equal('you must login first')
       done()
     })
   })
