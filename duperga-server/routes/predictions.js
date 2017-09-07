@@ -3,7 +3,7 @@ var router = express.Router();
 
 var predictionsCtrl = require('../controllers/predictionsController')
 
-/* GET users listing. */
+router.post('/', predictionsCtrl.predict)
 
 
 
