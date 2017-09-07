@@ -1,24 +1,22 @@
 
+
+
 var getAll = (req, res) => {
 
 }
 
-var getOne = (req, res) => {
+var register = (req, res) => {
 
 }
 
-var create = (req, res) => {
+var login = (req, res) => {
 
 }
 
-var remove = (req, res) => {
-
-}
-
-var update = (req, res) => {
+var clear = (req, res) => {
 
 }
 
 module.exports = {
-  getAll, getOne, create, remove, update
+  getAll, register, login
 }

@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var cors = require('cors')
 var compression = require('compression')
 require('dotenv').config()
+var mongoose = require('mongoose')
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -19,7 +20,7 @@ app.use(cookieParser());
 app.use(cors())
 app.use(compression())
 
-app.use('/', index);
+app.use('/api', index);
 app.use('/api/users', users);
 
 // catch 404 and forward to error handler
@@ -39,5 +40,10 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.send(err);
 });
+
+console.log('server run in port 3000')
+mongoose.connect(process.env.MONGODB_URL, err => {
+  err ? console.log(err.message) : console.log(`database connected`)
+})
 
 module.exports = app;

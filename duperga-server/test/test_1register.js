@@ -14,10 +14,12 @@ describe('POST /register', () => {
   after((done) => {
     axios.delete('/users/clear')
     .then(resp => {
-      console.log(resp)
+      console.log(resp.data)
+      done()
     })
     .catch(err => {
-      console.log(err)
+      console.log(err.message)
+      done()      
     })
   })
 
@@ -55,7 +57,7 @@ describe('POST /register', () => {
       err.response.data.status.should.equal(404)
       done()
     })
-  })  
+  })
 
 })
 
