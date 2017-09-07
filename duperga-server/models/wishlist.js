@@ -4,9 +4,13 @@ var Schema = mongoose.Schema
 
 var wishlistSchema = new Schema({
   name: {
-    type: String
+    type: String,
+    required: [true, 'name must not nuull']
   },
-  current_budget: {
+  time_period: {
+    type: Number
+  },
+  current_saving: {
     type: Number
   },
   predicted_budget: {
@@ -15,13 +19,10 @@ var wishlistSchema = new Schema({
   current_price: {
     type: Number
   },
-  predict_price: {
+  predicted_price: {
     type: Schema.Types.Mixed
-  },
-  userID: {
-    type: { Schema.Types.ObjectId }
   }
-})
+}, {timestamps: true})
 
 var Wishlist = mongoose.model('Wishlist', wishlistSchema)
 
