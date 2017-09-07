@@ -8,24 +8,68 @@ describe('PUT /wishlist/:wishlistID', () => {
   var token
 
   var newWishlist = {
-    name: 'Honda Mobilio',
-    budget: 50000000,
-    alexa_advice: 'save 20000000 per month',
-    category: 'Car'
+    name: 'Rumah di Dago',
+    time_period: 5,
+    current_price: 1000000000,
+    current_saving: 10000000,
+    predicted_budget: [
+      {
+        month: 'September',
+        price: 10020000
+      },
+      {
+        month: 'October',
+        price: 10400000
+      },
+      {
+        month: 'November',
+        price: 10600000
+      },
+      {
+        month: 'December',
+        price: 11000000
+      },
+      {
+        month: 'January',
+        price: 15000000
+      }
+    ],
+    predicted_price: [
+      {
+        month: 'September',
+        price: 1060000000
+      },
+      {
+        month: 'October',
+        price: 1080000000
+      },
+      {
+        month: 'November',
+        price: 1090000000
+      },
+      {
+        month: 'December',
+        price: 1100000000
+      },
+      {
+        month: 'January',
+        price: 1200000000
+      }
+    ]
   }
 
   // login first
-  before(done => {
-    axios.post(`/login`, userLogin)
-    .then((resp) => {
-      token = resp.data.token
-      done()
-    })
-    .catch(err => {
-      err.response.data.status.should.not.equal(404)
-      done()
-    })
-  })
+  // before(done => {
+  //   axios.post(`/login`, userLogin)
+  //   .then((resp) => {
+  //     token = resp.data.token
+  //     done()
+  //   })
+  //   .catch(err => {
+  //     err.response.data.status.should.not.equal(404)
+  //     done()
+  //   })
+  // })
 
   // create wishlist
   before(done => {
@@ -70,10 +114,6 @@ describe('PUT /wishlist/:wishlistID', () => {
   it(`name response should change to 'honda jazz'`, (done) => {
     axios.put(`/wishlist/${wishlistID}`, {
       name: 'honda jazz'
-    }, {
-      headers: {
-        token: token
-      }
     })
     .then((resp) => {
       resp.data.name.should.equal('honda jazz')
@@ -88,10 +128,6 @@ describe('PUT /wishlist/:wishlistID', () => {
   it(`name response should not change to 'honda jazz'`, (done) => {
     axios.put(`/wishlist/${wishlistID}`, {
       names: 'honda vario'
-    }, {
-      headers: {
-        token: token
-      }
     })
     .then((resp) => {
       resp.data.name.should.not.equal('honda vario')
@@ -106,10 +142,6 @@ describe('PUT /wishlist/:wishlistID', () => {
   it(`response have status 404 because it's don't have right end point`, (done) => {
     axios.put(`/wishlis/${wishlistID}`, {
       name: 'honda vario'
-    }, {
-      headers: {
-        token: token
-      }
     })
     .then((resp) => {
       resp.data.should.not.exist
@@ -121,13 +153,9 @@ describe('PUT /wishlist/:wishlistID', () => {
     })
   })
 
-  it(`response should return 'you are not authorized' when update because of wrong token`, done => {
+  it(`response should return 500`, done => {
     axios.put(`/wishlist/${wishlistID}`, {
-      name: 'honda vario'
-    }, {
-      headers: {
-        token: token
-      }
+      namee: 'honda vario'
     })
     .then((resp) => {
       resp.data.should.not.exist
@@ -135,24 +163,23 @@ describe('PUT /wishlist/:wishlistID', () => {
     })
     .catch(err => {
       err.response.data.status.should.equal(500)
-      err.response.data.message.should.equal('you are not authorized')
       done()
     })
   })
 
-  it(`response should return 'you must login first' when update because token was not exist`, done => {
-    axios.put(`/wishlist/${wishlistID}`, {
-      name: 'honda vario'
-    })
-    .then((resp) => {
-      resp.data.should.not.exist
-      done()
-    })
-    .catch(err => {
-      err.response.data.status.should.equal(500)
-      err.response.data.message.should.equal('you must login first')
-      done()
-    })
-  })
+  // it(`response should return 'you are not authorized' when update because of wrong token`, done => {
+  //   axios.put(`/wishlist/${wishlistID}`, {
+  //     name: 'honda vario'
+  //   })
+  //   .then((resp) => {
+  //     resp.data.should.not.exist
+  //     done()
+  //   })
+  //   .catch(err => {
+  //     err.response.data.status.should.equal(500)
+  //     err.response.data.message.should.equal('you are not authorized')
+  //     done()
+  //   })
+  // })
 
 })

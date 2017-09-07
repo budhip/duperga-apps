@@ -8,7 +8,7 @@ var wishlistSchema = new Schema({
     required: [true, 'name must not nuull']
   },
   time_period: {
-    type: Number
+    type: [Number, 'time_period must a number']
   },
   current_saving: {
     type: Number

@@ -11,6 +11,7 @@ var mongoose = require('mongoose')
 var index = require('./routes/index');
 var users = require('./routes/users');
 var wishlist = require('./routes/wishlist');
+var predictions = require('./routes/predictions')
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use(compression())
 app.use('/api', index);
 app.use('/api/users', users);
 app.use('/api/wishlist', wishlist)
+app.use('/api/predictions', predictions)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

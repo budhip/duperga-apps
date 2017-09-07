@@ -12,6 +12,4 @@ router.post('/seed', wishCtrl.seed)
 router.delete('/clear', wishCtrl.clear)
 router.delete('/:id', wishCtrl.remove)
 
-
-
 module.exports = router;
