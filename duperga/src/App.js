@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+
+import Store from './stores'
+import Home from './components/Home'
+import Navbar from './components/Navbar'
+import Detail from './components/Detail'
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Provider store={Store}>
+        <Router>
+          <div className="App">
+            <Navbar/>
+            <Route exact path ="/" component={Home} />
+            <Route exact path ="/edit/:id" component={Detail} />
+          </div>
+        </Router>
+      </Provider>
     );
   }
 }

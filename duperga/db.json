@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "name": "rumah1",
+      "time_period": "5 year",
+      "current_saving": 100,
+      "predicted_budget": 5000,
+      "current_price": 3000,
+      "predicted_price": 5000,
+      "alexaAdvice": "you should bla bla bla",
+      "imageItem": "https://sg1-cdn.pgimgs.com/developer-listing/2669650/OUPHO.82256184.C354X265/Halton-Place-Medan-Indonesia.jpg",
+      "createdAt": ""
+    },
+    {
+      "id": 2,
+      "name": "rumah2",
+      "time_period": "5 year",
+      "current_saving": 100,
+      "predicted_budget": 5000,
+      "current_price": 3000,
+      "predicted_price": 5000,
+      "alexaAdvice": "you should bla bla bla",
+      "imageItem": "https://sg1-cdn.pgimgs.com/developer-listing/2669650/OUPHO.82256184.C354X265/Halton-Place-Medan-Indonesia.jpg",
+      "createdAt": ""
+    },
+    {
+      "id": 3,
+      "name": "rumah3",
+      "time_period": "5 year",
+      "current_saving": 100,
+      "predicted_budget": 5000,
+      "current_price": 3000,
+      "predicted_price": 5000,
+      "alexaAdvice": "you should bla bla bla",
+      "imageItem": "https://sg1-cdn.pgimgs.com/developer-listing/2669650/OUPHO.82256184.C354X265/Halton-Place-Medan-Indonesia.jpg",
+      "createdAt": ""
+    }
+  ]
+}
