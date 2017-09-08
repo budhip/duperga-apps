@@ -14,34 +14,34 @@ describe('POST /register', () => {
   after((done) => {
     axios.delete('/users/clear')
     .then(resp => {
-      console.log(resp)
+      console.log(`clear all user`)
+      done()
     })
     .catch(err => {
-      console.log(err)
+      done()
     })
   })
 
   it(`Should create a user with name 'fajar'`, (done) => {
     axios.post(`/users/register`, newUser)
     .then( resp => {
-      console.log(data)
       resp.data.name.should.equal('fajar')
       done()
     })
     .catch(err => {
+      console.log('masuk erro')
       err.response.data.status.should.not.equal(404)
       done()
     })
   })
 
-  it(`Response should 'user registered'`, (done) => {
+  it(`Response should 'give error code 11000' or user already registered`, (done) => {
     axios.post(`/users/register`, newUser)
     .then(resp => {
-      resp.data.should.equal('user registered')
       done()
     })
     .catch(err => {
-      err.response.data.status.should.not.equal(404)
+      err.response.data.code.should.equal(11000)      
       done()
     })
   })
@@ -49,13 +49,13 @@ describe('POST /register', () => {
   it(`response status should '404'`, (done) => {
     axios.post(`/users/blabla`, newUser)
     .then(({data}) => {
-      console.log(data)
+      done()
     })
     .catch(err => {
       err.response.data.status.should.equal(404)
       done()
     })
-  })  
+  })
 
 })
 
