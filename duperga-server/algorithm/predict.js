@@ -33,10 +33,9 @@ var calculatePrice = (curr_price, interest, inflation, timeInMonth) => {
   let prices = []
 
   for (let i = 0; i < timeInYear; i++) {
-    total = Math.floor(current_price * Math.pow(total_interest, 1))
+    total = Math.floor(curr_price * Math.pow(total_interest, i))
     prices.push(total)
   }
-
   return prices
 }
 
@@ -46,7 +45,8 @@ var generateNewMonths = (monthsArr, firstMonth) => {
   return newMonths
 }
 
-var predictPrice = (curr_price, interest, inflation=0.03, time, wishType='house') => {
+var predictPrice = (curr_price, interest, inflation=0.03, time) => {
+
   let curr_year = new Date().getFullYear()
   let yearly_price = calculatePrice(curr_price, interest, inflation, time)
 
@@ -55,8 +55,8 @@ var predictPrice = (curr_price, interest, inflation=0.03, time, wishType='house'
     let year = curr_year + i
     predicted_price.push( { year: year, price: yearly_price[i]})
   }
+  return predicted_price
 }
-
 
 var predictBudget = (curr_saving, interest, time) => {
 
@@ -92,4 +92,3 @@ var predictBudget = (curr_saving, interest, time) => {
 }
 
 module.exports = { predictBudget, predictPrice };
-// console.log(predict())

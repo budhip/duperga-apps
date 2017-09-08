@@ -1,23 +1,37 @@
 var Wishlist = require('../models/wishlist')
-var algorithm = require('../algorithm/predict') // saving, interest, time
+var algorithm = require('../algorithm/predict')
 
 var predict = (req, res) => {
-  let saving = req.body.curr_saving
-  let interest = 0.09
+
+  let saving = req.body.current_saving
+  let current_price = req.body.current_price
+  let bankInterest = 0.09
+  let houseInterest = 0.2
   let time = req.body.time_period
-  let predictBudget = algorithm.predictBudget(saving, interest, time)
-  // let predicted_price = algorithm.predictPrice()
+  // saving, bankInterest, time
+  let predicted_budget = algorithm.predictBudget(saving, bankInterest, time)
+
+  // curr_price, interest, inflation, time
+  let predicted_price = algorithm.predictPrice(current_price, houseInterest, 0.03, time)
 
   let newWish = new Wishlist({
     name: req.body.name,
     time_period: time,
     current_saving: saving,
+    current_price: current_price,
     predicted_budget: predicted_budget,
-    current_price: current_price
+    predicted_price: predicted_price
   })
 
-  res.send(predictBudget)
+  newWish.save()
+  .then(wish => {
+    console.log(`- masuk bener`)
+    res.send(wish)
+  })
+  .catch(err => {
+    console.log(`- masuk err`)
+    res.status(500).send(err)
+  })
 }
-
 
 module.exports = { predict }

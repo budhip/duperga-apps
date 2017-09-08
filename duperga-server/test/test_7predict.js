@@ -14,7 +14,7 @@ describe(`POST /predictions > TensorFlow endPoint`, () => {
 
   let falseWishlist = {
     name: 'Rumah di Pakubuwono',
-    time_period: 'lima bulan',
+    time_period: 'lima',
     current_price: 1000000000,
     current_saving: 10000000
   }
@@ -42,10 +42,10 @@ describe(`POST /predictions > TensorFlow endPoint`, () => {
     })
   })
 
-  it('property predicted_price should an array', done => {
+  it('property predicted_price should not array', done => {
     axios.post('/predictions', newWishlist)
     .then(resp => {
-      resp.data.predicted_price.should.an('array')
+      resp.data.predicted_budget.should.an('array')
       done()
     })
     .catch(err => {
@@ -78,14 +78,14 @@ describe(`POST /predictions > TensorFlow endPoint`, () => {
     })
   })
 
-  it('response should return status 500 because time_period is not a number', done => {
+  it('response should return status 404 because time_period is not a number', done => {
     axios.post('/predict', falseWishlist)
     .then(resp => {
       resp.data.should.not.exist
       done()
     })
     .catch(err => {
-      err.response.data.status.should.equal(500)
+      err.response.data.status.should.equal(404)
       done()
     })
   })
