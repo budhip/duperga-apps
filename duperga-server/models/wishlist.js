@@ -13,11 +13,14 @@ var wishlistSchema = new Schema({
   current_saving: {
     type: Number
   },
-  predicted_budget: {
-    type: Schema.Types.Mixed
+  bank_saving: {
+    type: Number
   },
   current_price: {
     type: Number
+  },
+  predicted_budget: {
+    type: Schema.Types.Mixed
   },
   predicted_price: {
     type: Schema.Types.Mixed
