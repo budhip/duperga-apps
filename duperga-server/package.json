@@ -1,0 +1,25 @@
+{
+  "name": "express-gen-fajar",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "bcrypt": "^1.0.3",
+    "body-parser": "~1.17.1",
+    "chai": "^4.1.2",
+    "compression": "^1.7.0",
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
+    "debug": "~2.6.3",
+    "dotenv": "^4.0.0",
+    "express": "~4.15.2",
+    "jsonwebtoken": "^7.4.3",
+    "mongoose": "^4.11.10",
+    "morgan": "~1.8.1",
+    "nodemon": "^1.11.0"
+  }
+}
