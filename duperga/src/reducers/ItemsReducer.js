@@ -14,6 +14,13 @@ export default (state=initialState, action) => {
       return {...state, listItem:state.listItem.filter(data => {
         return data.id !== action.payload.index
       })}
+    case 'GET_DATA_GRAPH':
+      console.log('===================================================',action.payload.dataGrap);
+      let hehe = state.listItem
+      hehe.map(h => {
+        return h.concat(action.payload.dataGrap)
+      })
+      return {...state, listItem: hehe }
     default:
       return state
   }

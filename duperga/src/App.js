@@ -3,9 +3,10 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import Store from './stores'
-import Home from './components/Home'
+import ListItem from './components/ListItem'
 import Navbar from './components/Navbar'
 import Detail from './components/Detail'
+import Sidebar from './components/Sidebar'
 
 class App extends Component {
   render() {
@@ -14,8 +15,11 @@ class App extends Component {
         <Router>
           <div className="App">
             <Navbar/>
-            <Route exact path ="/" component={Home} />
-            <Route exact path ="/edit/:id" component={Detail} />
+            <Sidebar />
+            <div className="container-fluid">
+              <Route exact path ="/ListItem" component={ListItem} />
+              <Route exact path ="/detail/:id" component={Detail} />
+            </div>
           </div>
         </Router>
       </Provider>

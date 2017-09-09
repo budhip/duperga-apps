@@ -1,84 +1,103 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import { XAxis, YAxis, CartesianGrid, Tooltip, AreaChart, Area} from 'recharts';
-
-const data = [
-      {month: 'Jan-Dec 2017', price: 1000},
-      {month: 'Jan-Dec 2018', price: 1500},
-      {month: 'Jan-Dec 2019', price: 2000},
-      {month: 'Jan-Dec 2020', price: 2780},
-      {month: 'Jan-Dec 2021', price: 3000},
-      {month: 'Jan-Dec 2022', price: 4000},
-      {month: 'Jan-Dec 2023', price: 4100},
-      {month: 'Jan-Dec 2024', price: 6350},
-];
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
 
 export default class Detail extends Component {
   constructor(props) {
     super(props)
     this.state = {
       name: props.location.state.detailData.name,
-      time_period: props.location.state.detailData.time_period,
       current_saving: props.location.state.detailData.current_saving,
-      predicted_budget: props.location.state.detailData.predicted_budget,
       current_price: props.location.state.detailData.current_price,
+      bank_saving: props.location.state.detailData.bank_saving,
+      time_period: props.location.state.detailData.time_period,
+      predicted_budget: props.location.state.detailData.predicted_budget,
       predicted_price: props.location.state.detailData.predicted_price,
-      alexaAdvice: props.location.state.detailData.alexaAdvice,
-      imageItem: props.location.state.detailData.imageItem,
-      createdAt: props.location.state.detailData.createdAt
+      createdAt: props.location.state.detailData.createdAt,
+      updatedAt: props.location.state.detailData.updatedAt
     }
   }
   
   render(){
     return(
-        <div className="container">
-          <h3>Detail Item</h3><hr/>
-          <div className="row">
-            <div className="media">
-              <div className="media-left">
-                <img src={this.state.imageItem} className="media-object" style={{height: "330px"}} alt=""/>
-              </div>
-              <div className="media-body">
-                <div className="panel panel-default">
-                  <div className="panel-heading">
-                    <h5>{this.state.name}</h5>
-                  </div>
-                  <div className="panel-body">
-                    <p>Your Current Saving: <b>Rp. {this.state.current_saving}</b></p>
-                    <p>Current Price: <b>Rp. {this.state.current_price}</b></p>
-                    <p>You want Buy In: <b>{this.state.time_period} Later</b></p>
-                    <p>Predicted Price: <b>Rp. {this.state.predicted_price}</b></p>
-                    <p>The Funds You Have To Spent: <b>Rp. {this.state.predicted_budget}</b></p>
-                  </div>
-                  <div className="panel-footer">
-                    <Link className="btn btn-primary" to="/">Back</Link>
-                  </div>
+      
+      <div className="dashboard-content">
+        <div className="row">
+          <div className="col-md-12">
+            <h2>Detail Item</h2>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-12">
+            <div id="add-listing">
+              
+              <div className="add-listing-section">
+                <div className="add-listing-headline">
+                  <h3>{this.state.name}</h3>
+                  <p>Current Price: <b>Rp. {this.state.current_price}</b></p>
                 </div>
+                <p>Your Current Budget: <b>Rp. {this.state.current_saving}</b></p>
+                <p>Your Current Bank Saving: <b>Rp. {this.state.bank_saving}</b></p>
+                <p>You want Buy In: <b>{this.state.time_period} Month Later</b></p>
+                
+                
               </div>
             </div>
           </div>
-        
-          <div className="row">
-            
-              <AreaChart width={1200} height={300} data={data}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="month" />
-                <YAxis />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
-                <Area type="monotone" dataKey="price" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)" />
-              </AreaChart>
-            
+          
+          <div className="col-lg-12 margin-top-45">
+            <div id="add-listing">
+              
+              <div className="add-listing-section">
+                <div className="add-listing-headline">
+                  <h3><i className="sl sl-icon-chart" />Predicted Budget Chart</h3>
+                </div>
+                <LineChart width={900} height={300} data={this.state.predicted_budget}
+                      margin={{top: 5, right: 50, left: 20, bottom: 5}}>
+                 <XAxis dataKey="year"/>
+                 <YAxis/>
+                 <CartesianGrid strokeDasharray="5 5"/>
+                 <Tooltip/>
+                 <Legend />
+                 <Line type="monotone" dataKey="saving" stroke="#8884d8" activeDot={{r: 8}}/>
+                 <Line type="monotone" dataKey="month" stroke="#8884d8" activeDot={{r: 8}}/>
+                 
+                </LineChart>
+              </div>
+              
+            </div>
+          </div>
+          
+          <div className="col-lg-12 margin-top-45">
+            <div id="add-listing">
+              
+              <div className="add-listing-section">
+                <div className="add-listing-headline">
+                  <h3><i className="sl sl-icon-chart" />Predicted Price Chart</h3>
+                </div>
+                <BarChart width={600} height={300} data={this.state.predicted_price}
+                      margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+                   <XAxis dataKey="year"/>
+                   <YAxis/>
+                   <CartesianGrid strokeDasharray="3 3"/>
+                   <Tooltip/>
+                   <Legend />
+                 <Bar dataKey="price" fill="#8884d8" />
+                 
+                </BarChart>
+                <Link className="button gray" to="/ListItem">Back</Link>
+              </div>
+              
+            </div>
           </div>
           
         </div>
-        
+        <div className="row">
+          <div className="col-md-12">
+            <div className="copyrights">© 2017 Listeo. All Rights Reserved.</div>
+          </div>
+        </div>
+      </div>
     )
   }
   

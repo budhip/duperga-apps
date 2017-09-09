@@ -8,6 +8,14 @@ export const getData = (list) => {
     }
   }
 }
+export const getDataGrap = (data) => {
+  return {
+    type: "GET_DATA_GRAPH",
+    payload: {
+      dataGrap: data
+    }
+  }
+}
 
 export const deleteData = (id) => {
   return {
@@ -19,9 +27,23 @@ export const deleteData = (id) => {
 }
 
 export const dbGet = () => {
+  let predicted_price = [[]];
   return (dispatch, getState) => {
-    axios.get('http://localhost:3000/items')
+    axios.get('https://duperga-179314.appspot.com/api/wishlist/')
     .then(res => {
+      
+      let counter = 0
+      res.data.forEach( eachData => {
+        predicted_price.push([])
+        eachData.predicted_price.forEach( price => {
+          predicted_price[counter].push(price)
+        })
+        counter++
+      })
+      
+      predicted_price.pop()
+      console.log(predicted_price);
+      dispatch(getDataGrap(predicted_price))
       dispatch(getData(res.data))
     })
     .catch(err => console.log(err))
