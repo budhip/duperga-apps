@@ -8,8 +8,13 @@
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/colors/main.css" id="colors">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" integrity="sha384-L/tgI3wSsbb3f/nW9V6Yqlaw3Gj7mpE56LWrhew/c8MIhAYWZ/FNirA64AVkB5pI" crossorigin="anonymous"> -->
+  
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -21,7 +26,7 @@
     -->
     <title>React App</title>
   </head>
-  <body>
+  <body style="background-color: rgba(236, 240, 241,1.0)">
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
@@ -31,10 +36,24 @@
       If you open it directly in the browser, you will see an empty page.
 
       You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+      The build step will place the bundled ./script into the <body> tag.
 
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <!-- Scripts
+    ================================================== -->
+    <script type="text/javascript" src="./scripts/jquery-2.2.0.min.js"/></script>
+    <script type="text/javascript" src="./scripts/jpanelmenu.min.js"></script>
+    <script type="text/javascript" src="./scripts/chosen.min.js"></script>
+    <script type="text/javascript" src="./scripts/slick.min.js"></script>
+    <script type="text/javascript" src="./scripts/rangeslider.min.js"></script>
+    <script type="text/javascript" src="./scripts/magnific-popup.min.js"></script>
+    <script type="text/javascript" src="./scripts/waypoints.min.js"></script>
+    <script type="text/javascript" src="./scripts/counterup.min.js"></script>
+    <script type="text/javascript" src="./scripts/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="./scripts/tooltips.min.js"></script>
+    <script type="text/javascript" src="./scripts/custom.js"></script>
   </body>
 </html>
