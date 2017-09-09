@@ -7,18 +7,18 @@ var calculateBudget = (monthly_saving, interest, time, bank_saving) => {
     var myMoney = Math.floor(monthly_saving * Math.pow(total_interest, i))
     totalMoney += myMoney
     budgets.push(totalMoney)
-  }  
+  }
   let totalBudget = budgets.map(b => b + parseInt(bank_saving))
   return totalBudget
 }
 
 var calculatePrice = (curr_price, interest, inflation, timeInMonth) => {
   let timeInYear = Math.ceil(timeInMonth/12)
-  let total_interest = 1 + interest
+  let total_interest = 1 + inflation
   let total = 0
   let prices = []
 
-  for (let i = 0; i < timeInYear; i++) {
+  for (let i = 0; i <= timeInYear; i++) {
     total = Math.floor(curr_price * Math.pow(total_interest, i))
     prices.push(total)
   }
