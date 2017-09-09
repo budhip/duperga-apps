@@ -76,8 +76,8 @@ var predictSaving = (req, res) => {
 
 var predictAll = (req, res) => {
 
-  let bankInterest = 0.09
-  let houseInterest = 0.2
+  let bankInterest = 0.05
+  let houseInterest = 0.05
   let inflation = 0.04
   let saving = req.body.current_saving
   let current_price = req.body.current_price
@@ -85,6 +85,7 @@ var predictAll = (req, res) => {
   let time = req.body.time_period
   // saving, bankInterest, time
   let predicted_budget = algorithm.predictBudget(saving, bankInterest, time, bankSaving)
+  // console.log(predicted_budget)
 
   // curr_price, interest, inflation, time
   let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)

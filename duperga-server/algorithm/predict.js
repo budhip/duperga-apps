@@ -1,15 +1,22 @@
 
-var calculateBudget = (monthly_saving, interest, time, bank_saving) => {
+function calculateBudget (monthly_saving, interest, time, bank_saving) {
   let total_interest = 1 + interest
-  var totalMoney = 0
-  let budgets = []
+  console.log(`total interestnya ${interest}`)
+  let monthly_saving_hist = []
+
   for (let i = 1; i <= time; i++) {
-    var myMoney = Math.floor(monthly_saving * Math.pow(total_interest, i))
-    totalMoney += myMoney
-    budgets.push(totalMoney)
+    bank_saving += monthly_saving
+    monthly_saving_hist.push(bank_saving)
   }
-  let totalBudget = budgets.map(b => b + parseInt(bank_saving))
-  return totalBudget
+
+  let monthly_interest = 0
+  for (let i = 0; i < time; i++) {
+    if (i % 12 === 0) {
+      monthly_interest = Math.floor((((monthly_saving_hist[i] + (12 * monthly_saving)) * total_interest) - monthly_saving_hist[i]) / 12)
+    }
+    monthly_saving_hist[i] = monthly_saving_hist[i] + monthly_interest
+  }
+  return monthly_saving_hist
 }
 
 var calculatePrice = (curr_price, interest, inflation, timeInMonth) => {
@@ -28,7 +35,6 @@ var calculatePrice = (curr_price, interest, inflation, timeInMonth) => {
     total = Math.floor(curr_price * Math.pow(total_interest, i))
     prices.push(total)
   }
-  console.log(prices)
   return prices
 }
 
@@ -36,6 +42,14 @@ var generateNewMonths = (monthsArr, firstMonth) => {
   let head = monthsArr.splice(firstMonth)
   let newMonths = head.concat(monthsArr)
   return newMonths
+}
+
+function monthDiff(d1, d2) {
+    var months;
+    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth() + 1;
+    months += d2.getMonth();
+    return months <= 0 ? 0 : months;
 }
 
 var predictPrice = (curr_price, interest, inflation=0.05, time) => {
@@ -54,7 +68,8 @@ var predictPrice = (curr_price, interest, inflation=0.05, time) => {
 var predictBudget = (curr_saving, interest, time, bank_saving) => {
 
   let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  let monthly_budgets = calculateBudget(curr_saving, interest, time, bank_saving)
+
+  let monthly_budgets = calculateBudget(parseInt(curr_saving), interest, parseInt(time), parseInt(bank_saving))
 
   let curr_month_idx = new Date().getMonth()
   let curr_year = new Date().getFullYear()
@@ -65,7 +80,7 @@ var predictBudget = (curr_saving, interest, time, bank_saving) => {
   let monthIdx = 1
 
   for (let j = 0; j < time; j++) {
-    console.log(`urutan bulan ${newMonthsArr[monthIdx]}: ${monthIdx}`)
+    // console.log(`urutan bulan ${newMonthsArr[monthIdx]}: ${monthIdx}`)
     let data = {
       month: newMonthsArr[monthIdx], saving: monthly_budgets[j]
     }
