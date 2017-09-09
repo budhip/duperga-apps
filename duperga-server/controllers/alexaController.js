@@ -7,7 +7,7 @@ var save = (req, res) => {
   let current_price = req.body.current_price
   let bankInterest = 0.09
   let bankSaving = req.body.bank_saving
-  let houseInterest = 0.2
+  let houseInterest = 0.1
   let time = req.body.time_period
   // saving, bankInterest, time, bankSaving
   let predicted_budget = algorithm.predictBudget(saving, bankInterest, time, bankSaving)
