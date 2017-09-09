@@ -46,7 +46,7 @@ var predictMonthly = (req, res) => {
 
   let predicted_budget = algorithm.predictBudget(saving, bankInterest, time, bankSaving)
 
-  let predicted_price = algorithm.predictPrice(current_price, houseInterest, 0.03, time)
+  let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
 
   let toAlexa = {
     total_saving: predicted_budget[predicted_budget.length - 1].saving,
@@ -59,13 +59,16 @@ var predictMonthly = (req, res) => {
 }
 
 var predictSaving = (req, res) => {
+  console.log(`masukk`)
 
   let bankSaving = req.body.bank_saving
   let current_price = req.body.current_price
-  let houseInterest = 0.2
+  let inflation = 0.05
+  let houseInterest = 0.1
   let time = req.body.time_period
-
-  let predicted_price = algorithm.predictPrice(current_price, houseInterest, 0.03, time)
+  console.log(`-------------------- 0`)
+  let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
+  console.log(`---------------- 1`)
 
   let toAlexa = {
     bank_saving: bankSaving,

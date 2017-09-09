@@ -13,8 +13,15 @@ var calculateBudget = (monthly_saving, interest, time, bank_saving) => {
 }
 
 var calculatePrice = (curr_price, interest, inflation, timeInMonth) => {
+
   let timeInYear = Math.ceil(timeInMonth/12)
+
+  if (timeInMonth < 12) {
+    return [curr_price]
+  }
+
   let total_interest = 1 + inflation
+  console.log(`--------- total interest ${total_interest}`)
   let total = 0
   let prices = []
 
@@ -22,6 +29,7 @@ var calculatePrice = (curr_price, interest, inflation, timeInMonth) => {
     total = Math.floor(curr_price * Math.pow(total_interest, i))
     prices.push(total)
   }
+  console.log(prices)
   return prices
 }
 
@@ -31,7 +39,7 @@ var generateNewMonths = (monthsArr, firstMonth) => {
   return newMonths
 }
 
-var predictPrice = (curr_price, interest, inflation=0.03, time) => {
+var predictPrice = (curr_price, interest, inflation=0.05, time) => {
 
   let curr_year = new Date().getFullYear()
   let yearly_price = calculatePrice(curr_price, interest, inflation, time)
