@@ -21,7 +21,6 @@ var calculatePrice = (curr_price, interest, inflation, timeInMonth) => {
   }
 
   let total_interest = 1 + inflation
-  console.log(`--------- total interest ${total_interest}`)
   let total = 0
   let prices = []
 
@@ -63,9 +62,10 @@ var predictBudget = (curr_saving, interest, time, bank_saving) => {
 
   let predicted_budget = []
   let newTime = null
-  let monthIdx = 0
+  let monthIdx = 1
 
   for (let j = 0; j < time; j++) {
+    console.log(`urutan bulan ${newMonthsArr[monthIdx]}: ${monthIdx}`)
     let data = {
       month: newMonthsArr[monthIdx], saving: monthly_budgets[j]
     }
@@ -75,8 +75,9 @@ var predictBudget = (curr_saving, interest, time, bank_saving) => {
     } else {
       data.year = curr_year
     }
-    if (j % 12 === 0 && j !== 0) {
+    if (monthIdx == 11 && j !== 0) {
       monthIdx = 0
+      // data.month = newMonthsArr[monthIdx]
     } else {
       monthIdx++
     }

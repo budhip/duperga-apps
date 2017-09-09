@@ -27,11 +27,9 @@ var save = (req, res) => {
 
   newWish.save()
   .then(wish => {
-    console.log(`- masuk bener`)
     res.send(wish)
   })
   .catch(err => {
-    console.log(`- masuk err`)
     res.status(500).send(err)
   })
 }
@@ -59,16 +57,14 @@ var predictMonthly = (req, res) => {
 }
 
 var predictSaving = (req, res) => {
-  console.log(`masukk`)
 
   let bankSaving = req.body.bank_saving
   let current_price = req.body.current_price
   let inflation = 0.05
   let houseInterest = 0.1
   let time = req.body.time_period
-  console.log(`-------------------- 0`)
+
   let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
-  console.log(`---------------- 1`)
 
   let toAlexa = {
     bank_saving: bankSaving,
@@ -78,4 +74,31 @@ var predictSaving = (req, res) => {
 
 }
 
-module.exports = { save, predictSaving, predictMonthly }
+var predictAll = (req, res) => {
+
+  let bankInterest = 0.09
+  let houseInterest = 0.2
+  let inflation = 0.04
+  let saving = req.body.current_saving
+  let current_price = req.body.current_price
+  let bankSaving = req.body.bank_saving
+  let time = req.body.time_period
+  // saving, bankInterest, time
+  let predicted_budget = algorithm.predictBudget(saving, bankInterest, time, bankSaving)
+
+  // curr_price, interest, inflation, time
+  let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
+
+  let newWish = {
+    name: req.body.name,
+    time_period: time,
+    current_saving: saving,
+    bank_saving: req.body.bank_saving,
+    current_price: current_price,
+    predicted_budget: predicted_budget,
+    predicted_price: predicted_price
+  }
+  res.send(newWish)
+}
+
+module.exports = { save, predictSaving, predictMonthly, predictAll }
