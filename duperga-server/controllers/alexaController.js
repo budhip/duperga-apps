@@ -143,7 +143,6 @@ var getPredictMonthly = (req, res) => {
   res.send(toAlexa)
 }
 
-
 var getSave = (req, res) => {
   let bankInterest = 0.05
   let houseInterest = 0.05
@@ -177,7 +176,17 @@ var getSave = (req, res) => {
   })
 }
 
+var predictNewSaving = (req, res) => {
+  let bank_saving = req.body.bank_saving
+  let current_price = req.body.current_price
+  let time_period = req.body.time_period
+  let monthly_saving = req.body.current_saving
+
+  let newSaving = algorithm.predictNewSaving(current_price, bank_saving, monthly_saving, time_period)
+  res.send(newSaving)
+}
+
 module.exports = {
   save, predictSaving, predictMonthly, predictAll,
-  getPredictSaving, getPredictMonthly, getSave
+  getPredictSaving, getPredictMonthly, getSave, predictNewSaving
 }
