@@ -71,6 +71,16 @@ var seed = (req, res) => {
   })
 }
 
+var update = (req, res) => {
+  Wishlist.findByIdAndUpdate(req.params.wishlistID, req.body, { new: true })
+  .then(updated => {
+    res.send(updated)
+  })
+  .catch(err => {    
+    res.status(500).send(err)
+  })
+}
+
 var clear = (req, res) => {
   Wishlist.remove({})
   .then(removed => {
@@ -88,6 +98,7 @@ module.exports = {
   getById,
   search,
   remove,
+  update,
   seed,
   clear
 }

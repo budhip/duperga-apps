@@ -88,7 +88,6 @@ describe('PUT /wishlist/:wishlistID', () => {
   after(done => {
     axios.delete('/wishlist/clear')
     .then(resp => {
-      console.log(resp.data)
       done()
     })
     .catch(err => {
@@ -98,15 +97,15 @@ describe('PUT /wishlist/:wishlistID', () => {
   })
 
   it(`response should be an object`, (done) => {
-    axios.put(`/wishlist/`, {
-      budget: 1
+    axios.put(`/wishlist/${wishlistID}`, {
+      current_saving: 1
     })
     .then((resp) => {
       resp.data.should.be.an('object')
       done()
     })
     .catch(err => {
-      err.response.data.status.should.not.equal(404)
+      err.should.not.exist
       done()
     })
   })
@@ -127,10 +126,10 @@ describe('PUT /wishlist/:wishlistID', () => {
 
   it(`name response should not change to 'honda jazz'`, (done) => {
     axios.put(`/wishlist/${wishlistID}`, {
-      names: 'honda vario'
+      name: 'honda vario'
     })
     .then((resp) => {
-      resp.data.name.should.not.equal('honda vario')
+      resp.data.name.should.not.equal('honda jazz')
       done()
     })
     .catch(err => {
@@ -153,16 +152,16 @@ describe('PUT /wishlist/:wishlistID', () => {
     })
   })
 
-  it(`response should return 500`, done => {
-    axios.put(`/wishlist/${wishlistID}`, {
-      namee: 'honda vario'
+  it(`response should return 500, because of wrong wishlist id`, done => {
+    axios.put(`/wishlist/11111`, {
+      name: 'tes'
     })
     .then((resp) => {
       resp.data.should.not.exist
       done()
     })
     .catch(err => {
-      err.response.data.status.should.equal(500)
+      err.response.status.should.equal(500)
       done()
     })
   })

@@ -46,13 +46,12 @@ var login = (req, res) => {
       }, process.env.SECRET_KEY, { expiresIn: '6h'})
       res.send(token)
     } else {
-      console.log(`password not match`)
+      res.send(`password not match`)
     }
   })
   .catch(err => {
     console.log(`masukk error`)
-    console.log(err.response)
-    res.status(500).send('user not registered')
+    res.send('user not registered')
   })
 }
 
