@@ -51,7 +51,7 @@ app.use(function(err, req, res, next) {
 mongoose.Promise = global.Promise
 
 console.log('server run in port 3000')
-mongoose.connect(process.env.MONGODB_URL_DEV, err => {
+mongoose.connect(process.env.MONGODB_URL, err => {
   err ? console.log(err.message) : console.log(`database connected`)
 })
 

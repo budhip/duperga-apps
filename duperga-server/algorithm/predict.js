@@ -31,9 +31,11 @@ var calculatePrice = (curr_price, interest, inflation, timeInMonth) => {
 }
 
 function calculateTime(monthly_saving, interest, lastPrice, bank_saving, time_period) {
-  let predictedBudget = calculateBudget(monthly_saving, interest, time_period, bank_saving)
+  let predictedBudget = calculateBudget(+monthly_saving, +interest, +time_period, +bank_saving)
   let lastBudget = predictedBudget[predictedBudget.length - 1]
-  let newTime = Math.ceil((lastPrice - lastBudget)/monthly_saving) + time_period
+  let current_term = +time_period
+
+  let newTime = Math.ceil((lastPrice - lastBudget)/monthly_saving) + current_term
   return newTime
 }
 
