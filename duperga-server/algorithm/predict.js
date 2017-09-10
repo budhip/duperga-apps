@@ -1,20 +1,12 @@
 
+
 function calculateBudget (monthly_saving, interest, time, bank_saving) {
-  let total_interest = 1 + interest
-  console.log(`total interestnya ${interest}`)
   let monthly_saving_hist = []
-
-  for (let i = 1; i <= time; i++) {
-    bank_saving += monthly_saving
-    monthly_saving_hist.push(bank_saving)
-  }
-
-  let monthly_interest = 0
   for (let i = 0; i < time; i++) {
-    if (i % 12 === 0) {
-      monthly_interest = Math.floor((((monthly_saving_hist[i] + (12 * monthly_saving)) * total_interest) - monthly_saving_hist[i]) / 12)
-    }
-    monthly_saving_hist[i] = monthly_saving_hist[i] + monthly_interest
+    bank_saving += monthly_saving
+    // 0.082 = 30 / 365
+    let newSaving = (bank_saving * interest * 0.082) + bank_saving
+    monthly_saving_hist.push(newSaving)
   }
   return monthly_saving_hist
 }
