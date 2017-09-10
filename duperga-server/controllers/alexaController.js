@@ -37,11 +37,15 @@ var save = (req, res) => {
 
 var predictSaving = (req, res) => {
 
+  let bankInterest = 0.05
   let inflation = 0.05
   let houseInterest = 0.05
-  let bankSaving = req.body.bank_saving
-  let current_price = req.body.current_price
+  let totalInterest = 1 + bankInterest
+
   let time = req.body.time_period
+  let timeInYear = Math.ceil(time/12)
+  let bankSaving = req.body.bank_saving * Math.pow(totalInterest, timeInYear)
+  let current_price = req.body.current_price
 
   let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
 
@@ -106,8 +110,11 @@ var predictAll = (req, res) => {
 
 var getPredictSaving = (req, res) => {
   let inflation = 0.05
+  let bankInterest = 0.05
   let houseInterest = 0.05
-  let bankSaving = req.query.bank_saving
+  let totalInterest = 1 + bankInterest
+
+  let bankSaving = Math.floor(req.query.bank_saving * Math.pow(totalInterest, timeInYear))
   let current_price = req.query.current_price
   let time = req.query.time_period
 
@@ -186,7 +193,17 @@ var predictNewSaving = (req, res) => {
   res.send(newSaving)
 }
 
+var getPredictNewSaving = (req, res) => {
+  let bank_saving = req.query.bank_saving
+  let current_price = req.query.current_price
+  let time_period = req.query.time_period
+  let monthly_saving = req.query.current_saving
+
+  let newSaving = algorithm.predictNewSaving(current_price, bank_saving, monthly_saving, time_period)
+  res.send(newSaving)
+}
+
 module.exports = {
   save, predictSaving, predictMonthly, predictAll,
-  getPredictSaving, getPredictMonthly, getSave, predictNewSaving
+  getPredictSaving, getPredictMonthly, getSave, predictNewSaving, getPredictNewSaving
 }
