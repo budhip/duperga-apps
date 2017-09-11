@@ -7,6 +7,7 @@
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
+    "asyncawait": "^1.0.6",
     "axios": "^0.16.2",
     "bcrypt": "^1.0.3",
     "body-parser": "~1.17.1",
