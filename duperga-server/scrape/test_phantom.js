@@ -1,11 +1,16 @@
 var page = require('webpage').create();
-var url = 'https://www.instagram.com/';
+page.settings.userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.71 Safari/537.36';
 
-page.open(url, function (status) {
-    var js = page.evaluate(function () {
-        return document;
-    });
-    let source = js.all[0].outerHTML
-    console.log(source);
-    phantom.exit();
+var url = 'https://www.kompas.com/'
+page.open(url, function() {
+    window.setTimeout(function() {
+        var output = page.evaluate(function() {
+            return document
+        });
+        console.log(`----------- ini outputnya --------------`)
+        console.log(JSON.stringify(output));
+        console.log(`ini coba liat conentnya`)
+        console.log(JSON.stringify(output.content))
+    }, 1000);
+    phantom.exit()
 });
