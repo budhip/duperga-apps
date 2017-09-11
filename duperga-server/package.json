@@ -11,6 +11,7 @@
     "bcrypt": "^1.0.3",
     "body-parser": "~1.17.1",
     "chai": "^4.1.2",
+    "cheerio": "^1.0.0-rc.2",
     "compression": "^1.7.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
@@ -20,6 +21,7 @@
     "jsonwebtoken": "^7.4.3",
     "mongoose": "^4.11.10",
     "morgan": "~1.8.1",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "webpage": "^0.3.0"
   }
 }

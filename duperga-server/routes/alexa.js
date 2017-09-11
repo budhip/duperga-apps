@@ -3,10 +3,12 @@ var router = express.Router();
 
 var alexaCtrl = require('../controllers/alexaController')
 
-router.post('/predictSaving', alexaCtrl.predictSaving)
-router.post('/predictMonthly', alexaCtrl.predictMonthly)
-router.post('/predictAll', alexaCtrl.predictAll)
-router.post('/save', alexaCtrl.save)
+router.get('/predictSaving', alexaCtrl.getPredictSaving)
+router.get('/predictMonthly', alexaCtrl.getPredictMonthly)
+router.get('/predictNewSaving', alexaCtrl.getPredictNewSaving)
+router.get('/save', alexaCtrl.getSave)
+
+router.get('/predictAll', alexaCtrl.predictAll)
 
 
 module.exports = router;

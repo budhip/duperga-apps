@@ -30,6 +30,15 @@ var calculatePrice = (curr_price, interest, inflation, timeInMonth) => {
   return prices
 }
 
+function calculateTime(monthly_saving, interest, lastPrice, bank_saving, time_period) {
+  let predictedBudget = calculateBudget(+monthly_saving, +interest, +time_period, +bank_saving)
+  let lastBudget = predictedBudget[predictedBudget.length - 1]
+  let current_term = +time_period
+
+  let newTime = Math.ceil((lastPrice - lastBudget)/monthly_saving) + current_term
+  return newTime
+}
+
 var generateNewMonths = (monthsArr, firstMonth) => {
   let head = monthsArr.splice(firstMonth)
   let newMonths = head.concat(monthsArr)
@@ -93,4 +102,16 @@ var predictBudget = (curr_saving, interest, time, bank_saving) => {
   return predicted_budget
 }
 
-module.exports = { predictBudget, predictPrice };
+var predictNewSaving = (current_price, bank_saving, monthly_saving, time_period) => {
+  let bankInterest = 0.05
+  let predictedPrice = calculatePrice(current_price, interest=0.05, inflation=0.05, time_period)
+  let lastPrice = predictedPrice[predictedPrice.length - 1]
+  let newSaving = Math.floor((bank_saving - lastPrice) / time_period) * -1
+  let newTime = calculateTime(monthly_saving, bankInterest, lastPrice, bank_saving, time_period)
+  return {
+    new_time: newTime,
+    new_saving: newSaving
+  }
+}
+
+module.exports = { predictBudget, predictPrice, predictNewSaving };
