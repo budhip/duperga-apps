@@ -1,12 +1,10 @@
 'use strict';
-
+var https = require('https');
 var wishIntro = [
   "This sounds like a cool things. ",
   "Wow. ",
   "Oh, I like that. "
- ];
-
-// --------------- Helpers that build all of the responses -----------------------
+];
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
   return {
@@ -21,8 +19,8 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
     },
     reprompt: {
       outputSpeech: {
-        type: 'PlainText',
-        text: repromptText,
+          type: 'PlainText',
+          text: repromptText,
       },
     },
     shouldEndSession,
@@ -38,7 +36,6 @@ function buildResponse(sessionAttributes, speechletResponse) {
 }
 
 function buildSpeechletResponseWithDirectiveNoIntent() {
-  console.log("in buildSpeechletResponseWithDirectiveNoIntent");
   return {
     "outputSpeech" : null,
     "card" : null,
@@ -66,16 +63,11 @@ function buildSpeechletResponseDelegate(shouldEndSession) {
   }
 }
 
-// --------------- Functions that control the skill's behavior -----------------------
-
 function getWelcomeResponse(callback) {
-  // If we wanted to initialize the session to have some attributes we could add those here.
   const sessionAttributes = {};
   const cardTitle = 'Welcome';
   const speechOutput = 'Ok boss, I am opening your wishlist. ' +
       'What can I do for you?';
-  // If the user either does not reply to the welcome message or says something that is not
-  // understood, they will be prompted again with this text.
   const repromptText = 'Please tell me what you want to buy?';
   const shouldEndSession = false;
 
@@ -99,25 +91,56 @@ function setWishlistInSession(request, session, callback){
     speechOutput = "You'll buy ";
   }
 
-  //Now let's recap all slots
-  var itemSlot=request.intent.slots.item.value;
-  var priceSlot=request.intent.slots.price.value;
-  var timebuySlot=request.intent.slots.time_to_buy.value;
-  var currentsavingSlot=request.intent.slots.current_saving.value;
-  speechOutput = `You want to buy ${itemSlot} with price ${priceSlot} on ${timebuySlot} and your current saving is ${currentsavingSlot}`;
-
-  //say the results
-  callback(sessionAttributes,
-      buildSpeechletResponse("The Wish is ", speechOutput, "", true));
+  getPredictSaving(callback, sessionAttributes, request );
 }
 
 function handleSessionEndRequest(callback) {
   const cardTitle = 'Session Ended';
   const speechOutput = 'Thank you for trying the Alexa Skills Kit sample. Have a nice day!';
-  // Setting this to true ends the session and exits the skill.
   const shouldEndSession = true;
 
   callback({}, buildSpeechletResponse(cardTitle, speechOutput, null, shouldEndSession));
+}
+
+function monthDiff(d1, d2) {
+  var months;
+  months = (d2.getFullYear() - d1.getFullYear()) * 12;
+  months -= d1.getMonth();
+  months += d2.getMonth();
+  return months <= 0 ? 0 : months;
+}
+
+function getPredictSaving(callback, sessionAttributes, request){
+  console.log('=================masuk gak ya');
+  var itemSlot=request.intent.slots.item.value;
+  var priceSlot=request.intent.slots.price.value;
+  var timebuySlot=request.intent.slots.time_to_buy.value;
+  var currentsavingSlot=request.intent.slots.current_saving.value;
+  var bank_saving = currentsavingSlot;
+  var current_price = priceSlot;
+  var time_period = monthDiff(new Date(), new Date(timebuySlot));
+  https.get(`https://duperga-179314.appspot.com/api/alexa/predictSaving?bank_saving=${bank_saving}&current_price=${current_price}&time_period=${time_period}`, (resp) => {
+    let responseString = '';
+    resp.on('data', (data) => {
+      let _data = responseString += data
+      console.log('-------------------------------woyyyy', _data);
+      var hasildata = JSON.parse(_data);
+      var future_saving = hasildata.bank_saving;
+      var future_price = hasildata.total_price;
+      console.log('ini hasil bank_saving', future_saving);
+      console.log('ini hasil total_price', future_price);
+      var speechOutput = `You want to buy ${itemSlot} with price ${priceSlot} on ${timebuySlot} and your current saving is ${currentsavingSlot}. This prediction is your future money is ${future_saving} and price future is ${future_price}`;
+      var speechResp = buildSpeechletResponse("The Wish is ", speechOutput, "", true)
+      callback(sessionAttributes, speechResp);
+    });
+    resp.on('end', () => {
+      var responseStringObject = JSON.parse(responseString);
+      callback(null, responseStringObject);
+    });
+  })
+  .on("error", (err) => {
+    callback();
+  });
 }
 
 function delegateSlotCollection(request, sessionAttributes, callback){
@@ -127,14 +150,13 @@ function delegateSlotCollection(request, sessionAttributes, callback){
         buildSpeechletResponseWithDirectiveNoIntent());
   } else if (request.dialogState !== "COMPLETED") {
     callback(sessionAttributes,
-        buildSpeechletResponseWithDirectiveNoIntent());
+      buildSpeechletResponseWithDirectiveNoIntent());
   } else {
     return request.intent;
   }
 }
 
 function randomPhrase(array) {
-  // the argument is an array [] of words or phrases
   var i = 0;
   i = Math.floor(Math.random() * array.length);
   return(array[i]);
@@ -142,7 +164,6 @@ function randomPhrase(array) {
 
 function isSlotValid(request, slotName){
   var slot = request.intent.slots[slotName];
-  //console.log("request = "+JSON.stringify(request)); //uncomment if you want to see the request
   var slotValue;
 
   //if we have a slot, get the text and store it into speechOutput
@@ -156,9 +177,6 @@ function isSlotValid(request, slotName){
   }
 }
 
-
-// --------------- Events -----------------------
-
 /**
  * Called when the session starts.
  */
@@ -170,7 +188,6 @@ function onSessionStarted(sessionStartedRequest, session) {
  * Called when the user launches the skill without specifying what they want.
  */
 function onLaunch(launchRequest, session, callback) {
-  // Dispatch to your skill's launch.
   getWelcomeResponse(callback);
 }
 
@@ -178,12 +195,9 @@ function onLaunch(launchRequest, session, callback) {
  * Called when the user specifies an intent for this skill.
  */
 function onIntent(intentRequest, session, callback) {
-  console.log(`onIntent requestId=${intentRequest.requestId}, sessionId=${session.sessionId}`);
-
   const intent = intentRequest.intent;
   const intentName = intentRequest.intent.name;
 
-  // Dispatch to your skill's intent handlers
   if (intentName === 'buy_item') {
       setWishlistInSession(intentRequest, session, callback);
   } else if (intentName === 'AMAZON.HelpIntent') {
@@ -201,14 +215,10 @@ function onIntent(intentRequest, session, callback) {
  */
 function onSessionEnded(sessionEndedRequest, session) {
   console.log(`onSessionEnded requestId=${sessionEndedRequest.requestId}, sessionId=${session.sessionId}`);
-  // Add cleanup logic here
 }
 
 
-// --------------- Main handler -----------------------
 
-// Route the incoming request based on type (LaunchRequest, IntentRequest,
-// etc.) The JSON body of the request is provided in the event parameter.
 exports.handler = (event, context, callback) => {
   try {
     if (event.session.new) {
@@ -217,21 +227,21 @@ exports.handler = (event, context, callback) => {
 
     if (event.request.type === 'LaunchRequest') {
       onLaunch(event.request,
-      event.session,
-      (sessionAttributes, speechletResponse) => {
-        callback(null, buildResponse(sessionAttributes, speechletResponse));
-      });
+        event.session,
+        (sessionAttributes, speechletResponse) => {
+          callback(null, buildResponse(sessionAttributes, speechletResponse));
+        });
     } else if (event.request.type === 'IntentRequest') {
       onIntent(event.request,
-      event.session,
-      (sessionAttributes, speechletResponse) => {
+        event.session,
+        (sessionAttributes, speechletResponse) => {
           callback(null, buildResponse(sessionAttributes, speechletResponse));
-      });
+        });
     } else if (event.request.type === 'SessionEndedRequest') {
       onSessionEnded(event.request, event.session);
       callback();
     }
   } catch (err) {
-    callback(err);
+      callback(err);
   }
 };
