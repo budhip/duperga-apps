@@ -129,7 +129,13 @@ function getPredictSaving(callback, sessionAttributes, request){
       var future_price = hasildata.total_price;
       console.log('ini hasil bank_saving', future_saving);
       console.log('ini hasil total_price', future_price);
-      var speechOutput = `You want to buy ${itemSlot} with price ${priceSlot} on ${timebuySlot} and your current saving is ${currentsavingSlot}. This prediction is your future money is ${future_saving} and price future is ${future_price}`;
+      if (future_price <=  future_saving){
+        var speechOutput = `You want to buy ${itemSlot} with price ${priceSlot} rupiah on ${timebuySlot} and your current saving is ${currentsavingSlot} rupiah. My prediction is your future money is ${future_saving} rupiah and price future is ${future_price} rupiah.
+        Your budget is enough. You can buy it in the future`;
+      } else {
+        var speechOutput = 'Your budget is not enough'
+      }
+      // var speechOutput = `You want to buy ${itemSlot} with price ${priceSlot} on ${timebuySlot} and your current saving is ${currentsavingSlot}. This prediction is your future money is ${future_saving} and price future is ${future_price}`;
       var speechResp = buildSpeechletResponse("The Wish is ", speechOutput, "", true)
       callback(sessionAttributes, speechResp);
     });
