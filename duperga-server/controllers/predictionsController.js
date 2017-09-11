@@ -27,11 +27,9 @@ var predict = (req, res) => {
 
   newWish.save()
   .then(wish => {
-    console.log(`- masuk bener`)
     res.send(wish)
   })
   .catch(err => {
-    console.log(`- masuk err`)
     res.status(500).send(err)
   })
 }

@@ -36,13 +36,9 @@ var register = (req, res) => {
 }
 
 var login = (req, res) => {
-  console.log(`------------ masuk login`)
   User.findOne({email: req.body.email})
   .then(found => {
-    console.log('masukk found')
-    console.log(found)
     let decoded = bcrypt.compareSync(req.body.password, found.password)
-    console.log(decoded)
     if (decoded) {
       var token = jwt.sign({
         id: decoded.id,
@@ -50,13 +46,12 @@ var login = (req, res) => {
       }, process.env.SECRET_KEY, { expiresIn: '6h'})
       res.send(token)
     } else {
-      console.log(`password not match`)
+      res.send(`password not match`)
     }
   })
   .catch(err => {
     console.log(`masukk error`)
-    console.log(err.response)
-    res.status(500).send(err)
+    res.send('user not registered')
   })
 }
 
