@@ -269,7 +269,36 @@ var searchPrice = (req, res) => {
 
 }
 
+var searchWishlist = (req, res) => {
+  let wishListName = req.query.name
+
+  Wishlist.find({name: new RegExp(wishListName, "gi")})
+  .then(found => {
+    res.send(found)
+  })
+  .catch(err => {
+    res.status(500).send(err)
+  })
+}
+
+var deleteWishlist = (req, res) => {
+  let wishListName = req.query.name
+
+  if (wishListName === '') {
+    res.send('wish name cannot null')
+    return 1
+  }
+
+
+  Wishlist.findOneAndRemove({ name: new RegExp(wishListName, "gi")})
+  .then(removed => {
+    res.send(removed)
+  })
+  .catch(err => {
+    res.status(500).send(err)
+  })
+}
 
 module.exports = {
-  predictAll, getPredictSaving, getPredictMonthly, getSave, getPredictNewSaving, searchPrice
+  predictAll, getPredictSaving, getPredictMonthly, getSave, getPredictNewSaving, searchPrice, searchWishlist, deleteWishlist
 }

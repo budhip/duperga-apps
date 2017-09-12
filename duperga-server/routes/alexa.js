@@ -8,6 +8,8 @@ router.get('/predictMonthly', alexaCtrl.getPredictMonthly)
 router.get('/predictNewSaving', alexaCtrl.getPredictNewSaving)
 router.get('/save', alexaCtrl.getSave)
 router.get('/searchPrice', alexaCtrl.searchPrice)
+router.get('/searchWishlist', alexaCtrl.searchWishlist)
+router.get('/deleteWishlist', alexaCtrl.deleteWishlist)
 
 // end point for developer
 router.get('/predictAll', alexaCtrl.predictAll)
