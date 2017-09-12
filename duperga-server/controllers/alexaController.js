@@ -64,12 +64,20 @@ var getPredictSaving = (req, res) => {
 
     let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
 
-    let toAlexa = {
-      bank_saving: bankSaving,
-      total_price: predicted_price[predicted_price.length - 1].price
+    try {
+      var toAlexa = {
+        bank_saving: bankSaving,
+        total_price: predicted_price[predicted_price.length - 1].price
+      }
+    }
+    catch (err) {
+      console.log(err)
+      var toAlexa= {
+        bank_saving: null,
+        total_price: null
+      }
     }
     res.send(toAlexa)
-
   })
   .catch(err => console.log(err))
 
@@ -95,13 +103,27 @@ var getPredictMonthly = (req, res) => {
 
     let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
 
-    let toAlexa = {
-      total_saving: predicted_budget[predicted_budget.length - 1].saving,
-      last_month_saving: predicted_budget[predicted_budget.length - 1].month,
-      last_year_saving: predicted_budget[predicted_budget.length - 1].year,
-      total_price: predicted_price[predicted_price.length - 1].price,
-      price_in_year: predicted_price[predicted_price.length - 1].year
+    try {
+      var toAlexa = {
+        total_saving: predicted_budget[predicted_budget.length - 1].saving,
+        last_month_saving: predicted_budget[predicted_budget.length - 1].month,
+        last_year_saving: predicted_budget[predicted_budget.length - 1].year,
+        total_price: predicted_price[predicted_price.length - 1].price,
+        price_in_year: predicted_price[predicted_price.length - 1].year
+      }
     }
+
+    catch (err) {
+      console.log()
+      var toAlexa = {
+        total_saving: null,
+        last_month_saving: null,
+        last_year_saving: null,
+        total_price: null,
+        price_in_year: null
+      }
+    }
+
     res.send(toAlexa)
 
   })
@@ -116,6 +138,7 @@ var getSave = (req, res) => {
 
   let year = new Date().getFullYear()
 
+  let name = req.query.name
   let saving = req.query.current_saving
   let current_price = req.query.current_price
   let bankSaving = req.query.bank_saving
@@ -131,15 +154,30 @@ var getSave = (req, res) => {
     // curr_price, interest, inflation, time
     let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
 
-    let newWish = new Wishlist({
-      name: req.query.name,
-      time_period: time,
-      current_saving: saving,
-      bank_saving: req.query.bank_saving,
-      current_price: current_price,
-      predicted_budget: predicted_budget,
-      predicted_price: predicted_price
-    })
+    try {
+      var wish = {
+        name: req.query.name,
+        time_period: time,
+        current_saving: saving,
+        bank_saving: req.query.bank_saving,
+        current_price: current_price,
+        predicted_budget: predicted_budget,
+        predicted_price: predicted_price
+      }
+    } catch (e) {
+      console.log(e)
+      var wish = {
+        name: null,
+        time_period: null,
+        current_saving: null,
+        bank_saving: null,
+        current_price: null,
+        predicted_budget: null,
+        predicted_price: null
+      }
+    }
+
+    let newWish = new Wishlist(wish)
 
     newWish.save()
     .then(wish => {
@@ -159,7 +197,12 @@ var getPredictNewSaving = (req, res) => {
   let time_period = req.query.time_period
   let monthly_saving = req.query.current_saving
 
-  let newSaving = algorithm.predictNewSaving(current_price, bank_saving, monthly_saving, time_period)
+  try {
+    var newSaving = algorithm.predictNewSaving(current_price, bank_saving, monthly_saving, time_period)
+  } catch (e) {
+    console.log(e)
+    var newSaving = null
+  }
   res.send(newSaving)
 }
 
