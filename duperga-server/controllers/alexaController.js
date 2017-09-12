@@ -229,6 +229,8 @@ var getPredictNewSaving = (req, res) => {
 
 var searchPrice = (req, res) => {
   var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=Bandung&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
+  var regxJuta = /\s?juta/i
+  var regxMiliar = /\s?miliar/i
 
   axios.get(url)
   .then(resp => {
@@ -240,8 +242,16 @@ var searchPrice = (req, res) => {
     let houses = []
 
     for (let i = 0; i < tdInfoSpec.length; i++) {
+      let rawHarga = tdInfoSpec[i].children[0].children[0].data
+      let harga
+      if (regxJuta.test(rawHarga)) {
+        harga = rawHarga.replace(regxJuta, '000000')
+      } else {
+        harga = rawHarga.replace(regxMiliar, '000000000')
+      }
+
       let house = {
-        harga: tdInfoSpec[i].children[0].children[0].data,
+        harga: +harga,
         wilayah: tdTitleDesc[i].children[2].children[2].children[1].children[0].data,
         luas_tanah: tdInfoSpec[i].children[0].next.children[0].data,
         luas_bangunan: tdInfoSpec[i].children[1].next.children[0].data,
