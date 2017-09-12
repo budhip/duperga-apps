@@ -1,4 +1,6 @@
 
+var Inflation = require('../models/inflation')
+
 
 function calculateBudget (monthly_saving, interest, time, bank_saving) {
   let monthly_saving_hist = []
@@ -53,7 +55,7 @@ function monthDiff(d1, d2) {
     return months <= 0 ? 0 : months;
 }
 
-var predictPrice = (curr_price, interest, inflation=0.05, time) => {
+var predictPrice = (curr_price, interest, inflation, time) => {
 
   let curr_year = new Date().getFullYear()
   let yearly_price = calculatePrice(curr_price, interest, inflation, time)
