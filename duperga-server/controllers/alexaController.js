@@ -192,18 +192,26 @@ var getSave = (req, res) => {
 }
 
 var getPredictNewSaving = (req, res) => {
+
+  let year = new Date().getFullYear()
   let bank_saving = req.query.bank_saving
   let current_price = req.query.current_price
   let time_period = req.query.time_period
   let monthly_saving = req.query.current_saving
 
-  try {
-    var newSaving = algorithm.predictNewSaving(current_price, bank_saving, monthly_saving, time_period)
-  } catch (e) {
-    console.log(e)
-    var newSaving = null
-  }
-  res.send(newSaving)
+  Inflation.findOne({year: year})
+  .then(({inflation}) => {
+
+    inflation = inflation / 100
+    try {
+      var newSaving = algorithm.predictNewSaving(current_price, bank_saving, monthly_saving, time_period, inflation)
+    } catch (e) {
+      console.log(e)
+      var newSaving = null
+    }
+    res.send(newSaving)
+  })
+
 }
 
 module.exports = {

@@ -104,9 +104,9 @@ var predictBudget = (curr_saving, interest, time, bank_saving) => {
   return predicted_budget
 }
 
-var predictNewSaving = (current_price, bank_saving, monthly_saving, time_period) => {
+var predictNewSaving = (current_price, bank_saving, monthly_saving, time_period, inflation) => {
   let bankInterest = 0.05
-  let predictedPrice = calculatePrice(current_price, interest=0.05, inflation=0.05, time_period)
+  let predictedPrice = calculatePrice(current_price, interest=0.05, inflation, time_period)
   let lastPrice = predictedPrice[predictedPrice.length - 1]
   let newSaving = Math.floor((bank_saving - lastPrice) / time_period) * -1
   let newTime = calculateTime(monthly_saving, bankInterest, lastPrice, bank_saving, time_period)
