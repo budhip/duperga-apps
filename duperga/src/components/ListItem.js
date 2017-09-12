@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {dbGet, dbSearch, dbDelete} from '../actions'
+import Navbar from './Navbar'
+import Sidebar from './Sidebar'
 
 class ListItem extends Component {
   constructor(props) {
@@ -24,6 +26,8 @@ class ListItem extends Component {
     // console.log('===================', this.props.list);
     return(
       <div>
+      <Navbar />
+      <Sidebar />
         <div className="container-fluid">  
           <div className="col-lg-offset-3 col-md-9">
             <div className="row">
@@ -41,9 +45,9 @@ class ListItem extends Component {
                     <div className="list-box-listing">
                       <div className="list-box-listing-content">
                         <div className="inner">
-                          <h2 style={{textDecoration: "underline", marginTop: "10px"}}>{data.name}</h2>
-                          <p>Current Saving: <b>Rp. {data.current_saving}</b></p>
-                          <p>Current Price: <b>Rp. {data.current_price}</b></p>
+                          <h2 style={{marginTop: "10px"}}>{data.name}</h2>
+                          <p style={{marginBottom: "5px"}}>Current Saving: <b>Rp. {data.current_saving.toLocaleString()}</b></p>
+                          <p style={{marginBottom: "5px"}}>Current Price: <b>Rp. {data.current_price.toLocaleString()}</b></p>
                           <p>Time Period: <b>{data.time_period}</b></p>
                         </div>
                       </div>
@@ -61,7 +65,7 @@ class ListItem extends Component {
           </div>
         </div>
         <div className="col-md-12">
-          <div className="copyrights">© 2017 Listeo. All Rights Reserved.</div>
+          <div className="copyrights">© 2017 <b>Duperga</b>. All Rights Reserved.</div>
         </div>
         </div>
       </div>

@@ -10,8 +10,6 @@ class Navbar extends Component {
           <div className="container">
             <div className="left-side">
               <div id="logo">
-                <a href="index.html"><img src="images/logo.png" alt="" /></a>
-                <a href="index.html" className="dashboard-logo"><img src="images/logo2.png" alt="" /></a>
               </div>
               <div className="menu-responsive">
                 <i className="fa fa-reorder menu-trigger" />
