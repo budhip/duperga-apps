@@ -13,6 +13,7 @@ var users = require('./routes/users');
 var wishlist = require('./routes/wishlist');
 var predictions = require('./routes/predictions')
 var alexa = require('./routes/alexa')
+var inflation = require('./routes/inflation')
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use('/api/users', users);
 app.use('/api/wishlist', wishlist)
 app.use('/api/predictions', predictions)
 app.use('/api/alexa', alexa)
+app.use('/api/inflation', inflation)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -51,7 +53,7 @@ app.use(function(err, req, res, next) {
 mongoose.Promise = global.Promise
 
 console.log('server run in port 3000')
-mongoose.connect(process.env.MONGODB_URL_DEV, err => {
+mongoose.connect(process.env.MONGODB_URL, err => {
   err ? console.log(err.message) : console.log(`database connected`)
 })
 

@@ -14,7 +14,7 @@ axios.get(url)
 
   for (let i = 0; i < tdInfoSpec.length; i++) {
     let house = {
-       
+
     }
   }
 
