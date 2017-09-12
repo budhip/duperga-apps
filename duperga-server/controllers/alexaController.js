@@ -1,10 +1,10 @@
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
 
 var Wishlist = require('../models/wishlist')
 var Inflation = require('../models/inflation')
 var algorithm = require('../algorithm/predict')
+var axios = require('axios')
+const cheerio = require('cheerio')
 
 var predictAll = (req, res) => {
 
@@ -227,6 +227,39 @@ var getPredictNewSaving = (req, res) => {
 
 }
 
+var searchPrice = (req, res) => {
+  var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=Bandung&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
+
+  axios.get(url)
+  .then(resp => {
+    let pageString = resp.data
+    const $ = cheerio.load(pageString)
+    let tdInfoSpec = $('td.tdInfoSpec').get()
+    let tdTitleDesc = $('.TdTitleDesc').get()
+
+    let houses = []
+
+    for (let i = 0; i < tdInfoSpec.length; i++) {
+      let house = {
+        harga: tdInfoSpec[i].children[0].children[0].data,
+        wilayah: tdTitleDesc[i].children[2].children[2].children[1].children[0].data,
+        luas_tanah: tdInfoSpec[i].children[0].next.children[0].data,
+        luas_bangunan: tdInfoSpec[i].children[1].next.children[0].data,
+        jumlah_kamar: tdInfoSpec[i].children[3].children[0].children[0].data,
+        alamat: tdTitleDesc[i].children[0].next.next.next.children[0].data,
+        url: tdTitleDesc[i].children[0].next.children[0].children[0].attribs.href
+      }
+      houses.push(house)
+    }
+    res.send(houses)
+  })
+  .catch(err => {
+    res.send(err)
+  })
+
+}
+
+
 module.exports = {
-  predictAll, getPredictSaving, getPredictMonthly, getSave, getPredictNewSaving
+  predictAll, getPredictSaving, getPredictMonthly, getSave, getPredictNewSaving, searchPrice
 }
