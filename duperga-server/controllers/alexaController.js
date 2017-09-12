@@ -28,14 +28,27 @@ var predictAll = (req, res) => {
     // curr_price, interest, inflation, time
     let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
 
-    let newWish = {
-      name: req.query.name,
-      time_period: time,
-      current_saving: saving,
-      bank_saving: req.query.bank_saving,
-      current_price: current_price,
-      predicted_budget: predicted_budget,
-      predicted_price: predicted_price
+    try {
+      var newWish = {
+        name: req.query.name,
+        time_period: time,
+        current_saving: saving,
+        bank_saving: bankSaving,
+        current_price: current_price,
+        predicted_budget: predicted_budget,
+        predicted_price: predicted_price
+      }
+    } catch (e) {
+      console.log(e)
+      var newWish = {
+        name: null,
+        time_period: null,
+        current_saving: null,
+        bank_saving: null,
+        current_price: null,
+        predicted_budget: null,
+        predicted_price: null
+      }
     }
     res.send(newWish)
 
@@ -207,7 +220,7 @@ var getPredictNewSaving = (req, res) => {
       var newSaving = algorithm.predictNewSaving(current_price, bank_saving, monthly_saving, time_period, inflation)
     } catch (e) {
       console.log(e)
-      var newSaving = null
+      var newSaving = {new_time: null, new_saving: null}
     }
     res.send(newSaving)
   })
