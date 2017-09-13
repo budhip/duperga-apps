@@ -5,6 +5,27 @@ var Inflation = require('../models/inflation')
 var algorithm = require('../algorithm/predict')
 var axios = require('axios')
 const cheerio = require('cheerio')
+var firebase = require('firebase')
+
+var config = {
+  apiKey: "AIzaSyCcfYVFV31_UnKJfBL24uawHGKz_Z26sFE",
+  authDomain: "awesome-presentation.firebaseapp.com",
+  databaseURL: "https://awesome-presentation.firebaseio.com",
+  projectId: "awesome-presentation",
+  storageBucket: "awesome-presentation.appspot.com",
+  messagingSenderId: "1021392727967"
+};
+
+firebase.initializeApp(config);
+
+var database = firebase.database()
+
+var updateFlag = () => {
+  let date = new Date().toString()  
+  database.ref('duperga').set({
+    date: date
+  })
+}
 
 var predictAll = (req, res) => {
 
@@ -127,7 +148,7 @@ var getPredictMonthly = (req, res) => {
     }
 
     catch (err) {
-      console.log()
+      console.log(err)
       var toAlexa = {
         total_saving: null,
         last_month_saving: null,
@@ -195,6 +216,7 @@ var getSave = (req, res) => {
     newWish.save()
     .then(wish => {
       res.send(wish)
+      updateFlag()
     })
     .catch(err => {
       res.status(500).send(err)
@@ -214,7 +236,6 @@ var getPredictNewSaving = (req, res) => {
 
   Inflation.findOne({year: year})
   .then(({inflation}) => {
-
     inflation = inflation / 100
     try {
       var newSaving = algorithm.predictNewSaving(current_price, bank_saving, monthly_saving, time_period, inflation)
@@ -228,7 +249,7 @@ var getPredictNewSaving = (req, res) => {
 }
 
 var searchPrice = (req, res) => {
-  var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=Bandung&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
+  var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=${req.query.city}&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
   var regxJuta = /\s?juta/i
   var regxMiliar = /\s?miliar/i
 
