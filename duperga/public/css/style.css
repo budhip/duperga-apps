@@ -416,7 +416,7 @@ header.fullwidth .container {
 
 /* Footer Bottom */
 .copyrights {
-	color: #707070;
+	color: "black";
 	border-top: 1px solid rgba(0,0,0,0.09);
 	margin-top: 60px;
 	text-align: center;

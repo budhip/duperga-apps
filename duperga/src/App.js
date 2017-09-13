@@ -3,10 +3,13 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import Store from './stores'
+
+import Welcome from './components/Welcome'
 import ListItem from './components/ListItem'
-import Navbar from './components/Navbar'
 import Detail from './components/Detail'
-import Sidebar from './components/Sidebar'
+import LatestItem from './components/LatestItem'
+import Profile from './components/Profile'
+
 
 class App extends Component {
   render() {
@@ -14,12 +17,14 @@ class App extends Component {
       <Provider store={Store}>
         <Router>
           <div className="App">
-            <Navbar/>
-            <Sidebar />
-            <div className="container-fluid">
-              <Route exact path ="/ListItem" component={ListItem} />
-              <Route exact path ="/detail/:id" component={Detail} />
+            <div>              
+              <Route exact path ="/" component={Welcome} />
+              <Route exact path="/Home" component={LatestItem} />
+              <Route exact path="/ListItem" component={ListItem} />
+              <Route exact path="/Profile" component={Profile} />
+              <Route exact path="/detail/:id" component={Detail} />
             </div>
+            
           </div>
         </Router>
       </Provider>

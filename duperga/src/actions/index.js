@@ -17,34 +17,32 @@ export const getDataGrap = (data) => {
   }
 }
 
-export const deleteData = (id) => {
-  return {
-    type: 'DELETE_DATA',
-    payload: {
-      index: id
-    }
-  }
-}
-
 export const dbGet = () => {
-  let predicted_price = [[]];
   return (dispatch, getState) => {
     axios.get('https://duperga-179314.appspot.com/api/wishlist/')
     .then(res => {
       
-      let counter = 0
-      res.data.forEach( eachData => {
-        predicted_price.push([])
-        eachData.predicted_price.forEach( price => {
-          predicted_price[counter].push(price)
+      var newDataFilter = []
+      res.data.forEach(listData => {
+        var dataFilter = []
+        var objBudget = {}
+        listData.predicted_budget.forEach(dataBudget => {
+          let c = listData.predicted_price.filter(a => {
+            return a.year === dataBudget.year
+          })
+          objBudget = {
+            month: dataBudget.month,
+            saving: dataBudget.saving,
+            year: dataBudget.year,
+            price: c[0].price
+          }
+          dataFilter.push(objBudget)
         })
-        counter++
+        const newData = {...listData, dataFilter: dataFilter}
+        newDataFilter.push(newData)
       })
-      
-      predicted_price.pop()
-      console.log(predicted_price);
-      dispatch(getDataGrap(predicted_price))
-      dispatch(getData(res.data))
+
+      dispatch(getData(newDataFilter))
     })
     .catch(err => console.log(err))
   }
@@ -52,9 +50,29 @@ export const dbGet = () => {
 
 export const dbSearch = (keyword) => {
   return(dispatch) => {
-    axios.get(`http://localhost:3000/items`)
+    axios.get(`https://duperga-179314.appspot.com/api/wishlist/`)
     .then(res => {
-      dispatch(getData(res.data))
+      var newDataFilter = []
+      res.data.forEach(listData => {
+        var dataFilter = []
+        var objBudget = {}
+        listData.predicted_budget.forEach(dataBudget => {
+          let c = listData.predicted_price.filter(a => {
+            return a.year === dataBudget.year
+          })
+          objBudget = {
+            month: dataBudget.month,
+            saving: dataBudget.saving,
+            year: dataBudget.year,
+            price: c[0].price
+          }
+          dataFilter.push(objBudget)
+        })
+        const newData = {...listData, dataFilter: dataFilter}
+        newDataFilter.push(newData)
+      })
+
+      dispatch(getData(newDataFilter))
       dispatch({
         type: 'SEARCH',
         payload: {
@@ -67,11 +85,11 @@ export const dbSearch = (keyword) => {
 }
 
 export const dbDelete = (id) => {
-  return(dispatch) => {
-    axios.delete(`http://localhost:3000/items/${id}`)
+  return(dispatch, getState) => {
+    axios.delete(`https://duperga-179314.appspot.com/api/wishlist/${id}`)
     .then(res => {
-      dispatch(deleteData(res))
-    })
+    dispatch(dbGet())
+  })
     .catch(err => console.log(err))
   }
 }
