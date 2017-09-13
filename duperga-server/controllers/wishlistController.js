@@ -22,7 +22,7 @@ var create = (req, res) => {
 }
 
 var getAll = (req,res) => {
-  Wishlist.find({})
+  Wishlist.find({}).sort({createdAt: -1})
   .then(list => {
     res.send(list)
   })
@@ -76,7 +76,7 @@ var update = (req, res) => {
   .then(updated => {
     res.send(updated)
   })
-  .catch(err => {    
+  .catch(err => {
     res.status(500).send(err)
   })
 }
