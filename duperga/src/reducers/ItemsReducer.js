@@ -10,10 +10,6 @@ export default (state=initialState, action) => {
       return {...state, listItem: state.listItem.filter(data => {
         return data.name.toLowerCase().indexOf(action.payload.keyword.toLowerCase())>=0
       })}
-    case 'DELETE_DATA':
-      return {...state, listItem:state.listItem.filter(data => {
-        return data.id !== action.payload.index
-      })}
     default:
       return state
   }

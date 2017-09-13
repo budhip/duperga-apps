@@ -16,8 +16,12 @@ export default class Sidebar extends Component {
               </li>
             </ul>
             <ul data-submenu-title="Account">
-              <li><a href="dashboard-my-profile.html"><i className="sl sl-icon-user" /> My Profile</a></li>
-              <li><a href="index.html"><i className="sl sl-icon-power" /> Logout</a></li>
+              <li>
+                <Link to="/Profile"><i className="sl sl-icon-user" /> My Profile</Link>
+              </li>
+              <li>
+                <Link to="/"><i className="sl sl-icon-power" /> Logout</Link>
+              </li>
             </ul>
           </div>
         </div>

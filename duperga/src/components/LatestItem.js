@@ -22,7 +22,7 @@ const CustomizedYAxisTick = React.createClass({
     const {x, y, payload} = this.props;
    	return (
     	<g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor="end" fill="#666" >{(payload.value/1000).toLocaleString()}k</text>
+        <text x={0} y={0} dy={16} textAnchor="end" fill="#666" >{(payload.value/1000).toLocaleString()}</text>
       </g>
     );
   }
@@ -43,9 +43,9 @@ const CustomTooltip  = React.createClass({
           color: "white",
           borderRadius: "10px"
         }}>
-          <p>current saving Rp. {payload[0].payload.saving.toLocaleString()}</p>
-          <p>current price Rp. {payload[0].payload.price.toLocaleString()}</p>
-          <p>Month: {payload[0].payload.month}</p>
+          <p style={{marginBottom: "3px"}}>Current Saving: Rp. {payload[0].payload.saving.toLocaleString()}</p>
+          <p style={{marginBottom: "3px"}}>Current Price: Rp. {payload[0].payload.price.toLocaleString()}</p>
+          <p style={{marginBottom: "2px"}}>Month: {payload[0].payload.month}</p>
         </div>
       );
     }

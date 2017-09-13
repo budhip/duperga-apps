@@ -8,6 +8,7 @@ import Welcome from './components/Welcome'
 import ListItem from './components/ListItem'
 import Detail from './components/Detail'
 import LatestItem from './components/LatestItem'
+import Profile from './components/Profile'
 
 
 class App extends Component {
@@ -16,10 +17,11 @@ class App extends Component {
       <Provider store={Store}>
         <Router>
           <div className="App">
-          <Route exact path ="/" component={Welcome} />
             <div>              
+              <Route exact path ="/" component={Welcome} />
               <Route exact path="/Home" component={LatestItem} />
               <Route exact path="/ListItem" component={ListItem} />
+              <Route exact path="/Profile" component={Profile} />
               <Route exact path="/detail/:id" component={Detail} />
             </div>
             

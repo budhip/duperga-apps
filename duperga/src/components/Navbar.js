@@ -10,18 +10,19 @@ class Navbar extends Component {
           <div className="container">
             <div className="left-side">
               <div id="logo">
+              
               </div>
               <div className="menu-responsive">
                 <i className="fa fa-reorder menu-trigger" />
               </div>
               <nav id="navigation" className="style-1">
                 <ul id="responsive">
-                  <li><a href="">Home</a>
+                <li><a href="">Home</a>
                     <ul>
                       <li><a href="index.html">Home 1</a></li>
                       <li><a href="index-2.html">Home 2</a></li>
                     </ul>
-                  </li>
+                  </li> 
                 </ul>
               </nav>
             </div>

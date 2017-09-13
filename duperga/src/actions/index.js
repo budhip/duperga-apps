@@ -17,19 +17,11 @@ export const getDataGrap = (data) => {
   }
 }
 
-export const deleteData = (id) => {
-  return {
-    type: 'DELETE_DATA',
-    payload: {
-      index: id
-    }
-  }
-}
-
 export const dbGet = () => {
   return (dispatch, getState) => {
     axios.get('https://duperga-179314.appspot.com/api/wishlist/')
     .then(res => {
+      
       var newDataFilter = []
       res.data.forEach(listData => {
         var dataFilter = []
@@ -93,11 +85,11 @@ export const dbSearch = (keyword) => {
 }
 
 export const dbDelete = (id) => {
-  return(dispatch) => {
-    axios.delete(`http://localhost:3000/items/${id}`)
+  return(dispatch, getState) => {
+    axios.delete(`https://duperga-179314.appspot.com/api/wishlist/${id}`)
     .then(res => {
-      dispatch(deleteData(res))
-    })
+    dispatch(dbGet())
+  })
     .catch(err => console.log(err))
   }
 }

@@ -29,14 +29,14 @@ class ListItem extends Component {
       <Navbar />
       <Sidebar />
         <div className="container-fluid">  
-          <div className="col-lg-offset-3 col-md-9">
+          <div className="col-md-offset-2 col-md-9" style={{marginLeft: "280px"}}>
             <div className="row">
               <div style={{marginLeft: "15px"}}>
                 <input style={{width: '350px', textAlign: 'center'}} onChange={(e) => this.handleInput(e.target.value)} type="text" className="form-control" placeholder="Search Your Items Here" />
               </div>
             </div>
           <div className="row">
-            <div className="col-lg-12 col-md-12">
+            <div className="col-md-12">
               <div className="dashboard-list-box margin-top-0">
                 <h4>Active Listings</h4>
                 <ul>
@@ -53,9 +53,10 @@ class ListItem extends Component {
                       </div>
                     </div>
                     <div className="buttons-to-right">
-                      <Link className="button gray" style={{marginRight: '10px'}} to={{
+                      <button className="button gray" style={{marginRight: '10px'}}><Link to={{
                         pathname: `/detail/${data._id}`,
-                        state: {detailData: data} }}><i className="sl sl-icon-info" />Detail</Link>
+                        state: {detailData: data} }}><i className="sl sl-icon-info" />Detail</Link></button>
+                      <button className="button gray" onClick={() => this.props.delete(data._id)} >Delete</button>
                     </div>
                   </li>)
                 })}
@@ -64,8 +65,10 @@ class ListItem extends Component {
             </div>
           </div>
         </div>
-        <div className="col-md-12">
-          <div className="copyrights">© 2017 <b>Duperga</b>. All Rights Reserved.</div>
+        <div className="row">
+          <div className="col-md-offset-3 col-md-8">
+            <div className="copyrights">© 2017 <b>Duperga</b>. All Rights Reserved.</div>
+          </div>
         </div>
         </div>
       </div>
