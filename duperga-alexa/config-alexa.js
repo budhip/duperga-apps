@@ -6,6 +6,11 @@ var wishIntro = [
   "Oh, I like that. "
 ];
 
+var priceslotsValue = '';
+var timeperiodslotsValue = '';
+var itemperiodslotsValue = '';
+var currentsavingslotsValue = '';
+
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
   return {
     outputSpeech: {
@@ -113,17 +118,20 @@ function monthDiff(d1, d2) {
 function getPredictSaving(callback, sessionAttributes, request){
   console.log('=================masuk gak ya');
   var itemSlot=request.intent.slots.item.value;
+  console.log(itemSlot);
   var priceSlot=request.intent.slots.price.value;
   var timebuySlot=request.intent.slots.time_to_buy.value;
   var currentsavingSlot=request.intent.slots.current_saving.value;
   var bank_saving = currentsavingSlot;
   var current_price = priceSlot;
   var time_period = monthDiff(new Date(), new Date(timebuySlot));
+  console.log('---------------------------------1');
   https.get(`https://duperga-179314.appspot.com/api/alexa/predictSaving?bank_saving=${bank_saving}&current_price=${current_price}&time_period=${time_period}`, (resp) => {
     let responseString = '';
+    console.log('---------------------------------2');
     resp.on('data', (data) => {
       let _data = responseString += data
-      console.log('-------------------------------woyyyy', _data);
+      console.log('-------------------------------3', _data);
       var hasildata = JSON.parse(_data);
       var future_saving = hasildata.bank_saving;
       var future_price = hasildata.total_price;
@@ -133,11 +141,18 @@ function getPredictSaving(callback, sessionAttributes, request){
         var speechOutput = `You want to buy ${itemSlot} with price ${priceSlot} rupiah on ${timebuySlot} and your current saving is ${currentsavingSlot} rupiah. My prediction is your future money is ${future_saving} rupiah and price future is ${future_price} rupiah.
         Your budget is enough. You can buy it in the future`;
       } else {
-        var speechOutput = 'Your budget is not enough'
+        console.log('fad saving',future_saving);
+        console.log('fad price', future_price);
+        var speechOutput = `My prediction is your future money is ${future_saving} rupiah and price future is ${future_price} rupiah.
+        Your budget is not enough. You must have saving per month, want try it?`;
+        var repromptText = 'want try it?';
       }
-      // var speechOutput = `You want to buy ${itemSlot} with price ${priceSlot} on ${timebuySlot} and your current saving is ${currentsavingSlot}. This prediction is your future money is ${future_saving} and price future is ${future_price}`;
-      var speechResp = buildSpeechletResponse("The Wish is ", speechOutput, "", true)
-      callback(sessionAttributes, speechResp);
+      priceslotsValue = request.intent.slots.price.value;
+      timeperiodslotsValue = time_period;
+      itemperiodslotsValue = request.intent.slots.item.value;
+      currentsavingslotsValue = request.intent.slots.current_saving.value;
+      callback(sessionAttributes,
+          buildSpeechletResponse("saving per month", speechOutput, repromptText, false));
     });
     resp.on('end', () => {
       var responseStringObject = JSON.parse(responseString);
@@ -147,6 +162,59 @@ function getPredictSaving(callback, sessionAttributes, request){
   .on("error", (err) => {
     callback();
   });
+}
+
+function handleSavingPerMonth(intent, session, callback) {
+  const cardTitle = intent.name;
+  const savingpermonthSlot = intent.slots.my_saving;
+  let repromptText = '';
+  let sessionAttributes = {};
+  const shouldEndSession = false;
+  let speechOutput = '';
+
+  var priceAfterYes = parseInt(priceslotsValue);
+  var timeperiodAfterYes = parseInt(timeperiodslotsValue);
+  var itemAfterYes = itemperiodslotsValue;
+  var currentsavingAfterYes = parseInt(currentsavingslotsValue);
+  if (!savingpermonthSlot.value) {
+    speechOutput = "How much your current savings per month right now ?";
+    repromptText = "How much your current savings per month right now ?";
+  } else {
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$0');
+    var savingpermonth = savingpermonthSlot.value;
+    sessionAttributes = {savingpermonth};
+    https.get(`https://duperga-179314.appspot.com/api/alexa/predictMonthly?name=${itemAfterYes}&bank_saving=${currentsavingAfterYes}&current_saving=${savingpermonth}&current_price=${priceAfterYes}&time_period=${timeperiodAfterYes}`, (resp) => {
+      console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$1');
+      let responseMonthlyString = '';
+      resp.on('data', (data) => {
+        console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$2');
+        let _dataMonthly = responseMonthlyString += data
+        var hasildataMonthly = JSON.parse(_dataMonthly);
+        var future_saving_monthly = hasildataMonthly.total_saving;
+        var future_price_monthly = hasildataMonthly.total_price;
+        // var speechOutput = 'ini adalah adalah'
+        if (future_price_monthly <=  future_saving_monthly){
+          // var speechOutput = 'Udah cukup';
+          var speechOutput = `My prediction is your future money is ${future_saving_monthly} rupiah and price future is ${future_price_monthly} rupiah.
+          Your budget is enough. You can buy it in the future`;
+        } else {
+          // var speechOutput = 'Masih gak cukup';
+          var speechOutput = `My prediction is your future money is ${future_saving_monthly} rupiah and price future is ${future_price_monthly} rupiah.
+          Your budget is not enough. You must have saving per month, want try it?`;
+          // var repromptText = 'want try it?';
+        }
+        callback(sessionAttributes,
+            buildSpeechletResponse(cardTitle, speechOutput, repromptText, false));
+      });
+      resp.on('end', () => {
+        var responseMonthlyStringObject = JSON.parse(responseMonthlyString);
+        callback(null, responseMonthlyStringObject);
+      });
+    })
+    .on("error", (err) => {
+      callback();
+    });
+  }
 }
 
 function delegateSlotCollection(request, sessionAttributes, callback){
@@ -206,11 +274,14 @@ function onIntent(intentRequest, session, callback) {
 
   if (intentName === 'buy_item') {
       setWishlistInSession(intentRequest, session, callback);
+  } else if (intentName === 'yes_answer') {
+      handleSavingPerMonth(intent, session, callback);
   } else if (intentName === 'AMAZON.HelpIntent') {
       getWelcomeResponse(callback);
   } else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent') {
       handleSessionEndRequest(callback);
   } else {
+      console.log('----------------------intent name', intentName);
       throw new Error('Invalid intent');
   }
 }
