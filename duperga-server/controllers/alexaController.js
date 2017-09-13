@@ -21,7 +21,7 @@ firebase.initializeApp(config);
 var database = firebase.database()
 
 var updateFlag = () => {
-  let date = new Date().toString()  
+  let date = new Date().toString()
   database.ref('duperga').set({
     date: date
   })
@@ -89,7 +89,14 @@ var getPredictSaving = (req, res) => {
   let year = new Date().getFullYear()
   let timeInYear = Math.ceil(time/12)
 
-  let bankSaving = Math.floor(req.query.bank_saving * Math.pow(totalInterest, timeInYear))
+  let bankSaving
+
+  if (time < 12) {
+    bankSaving = req.query.bank_saving
+  } else {
+    bankSaving = Math.floor(req.query.bank_saving * Math.pow(totalInterest, timeInYear))
+  }
+  
   let current_price = req.query.current_price
 
   Inflation.findOne({year: year})
