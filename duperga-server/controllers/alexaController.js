@@ -96,7 +96,7 @@ var getPredictSaving = (req, res) => {
   } else {
     bankSaving = Math.floor(req.query.bank_saving * Math.pow(totalInterest, timeInYear))
   }
-  
+
   let current_price = req.query.current_price
 
   Inflation.findOne({year: year})
@@ -127,9 +127,7 @@ var getPredictSaving = (req, res) => {
 var getPredictMonthly = (req, res) => {
   let bankInterest = 0.05
   let houseInterest = 0.05
-  // let inflation = 0.05
   let year = new Date().getFullYear()
-  // let inflation = await getInflation(year)
   let saving = req.query.current_saving
   let current_price = req.query.current_price
   let bankSaving = req.query.bank_saving
@@ -256,7 +254,16 @@ var getPredictNewSaving = (req, res) => {
 }
 
 var searchPrice = (req, res) => {
-  var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=${req.query.city}&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
+  let city = req.query.name
+  let citySentence = req.query.name.split(' ')
+  for(let i = 0; i < citySentence.length; i++) {
+    let word = citySentence[i].split('')
+    word[0] = word[0].toUpperCase()
+    citySentence[i] = word.join('')
+  }
+  citySentence = citySentence.join('+')
+  
+  var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=${citySentence}&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
   var regxJuta = /\s?juta/i
   var regxMiliar = /\s?miliar/i
 
