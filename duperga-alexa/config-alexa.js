@@ -12,6 +12,7 @@ var itemperiodslotsValue = '';
 var placeslotsValue = '';
 var currentsavingslotsValue = '';
 var savingpermonthslotsValue = '';
+var priceSuggestionslotsValue = '';
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
   return {
@@ -64,7 +65,7 @@ function buildSpeechletResponseDelegate(shouldEndSession) {
         "type": "Dialog.Delegate",
         "updatedIntent": null
       }
-    ],
+    ],
     reprompt: null,
     shouldEndSession: shouldEndSession
   }
@@ -133,13 +134,18 @@ function getPredictSaving(callback, sessionAttributes, request){
       var hasildata = JSON.parse(_data);
       var future_saving = hasildata.bank_saving;
       var future_price = hasildata.total_price;
+      console.log('ini future price', future_price);
+      var pembulatan_future_saving = pembulatan(future_saving);
+      console.log('ini pembulatan future saving', pembulatan_future_saving);
+      var pembulatan_future_price = pembulatan(future_price);
+      console.log('ini pembulatan future price', pembulatan_future_price);
       if (future_price <=  future_saving){
         var speechOutput = `You want to buy ${itemSlot} in ${placeSlot} with price ${priceSlot} rupiah on ${timebuySlot} and your current saving is ${currentsavingSlot} rupiah.
-        In the future, the price of this house will be ${future_price} rupiah and your money will be ${future_saving} rupiah.
+        In the future, the price of this house will be about ${pembulatan_future_price} rupiah and your money will be about ${pembulatan_future_saving} rupiah.
         Your budget is enough. You can buy it in the future. Do you want to save it honey?`;
       } else {
-        var speechOutput = `In the future, the price of this house will be ${future_price} rupiah and your money will be ${future_saving} rupiah.
-        I'm sorry my honey, it's not enough.
+        var speechOutput = `In the future, the price of this house will be about ${pembulatan_future_price} rupiah and your money will be ${pembulatan_future_saving} rupiah.
+        I'm sorry honey, it's not enough.
         You must saving some money per month, will you save some money?`;
         var repromptText = 'will you?';
       }
@@ -178,7 +184,33 @@ function handleSavingToApi(intent, session, callback) {
     var itemAfterYes = `${itemperiodslotsValue} in ${placeslotsValue}`;
     var currentsavingAfterYes = parseInt(currentsavingslotsValue);
     var savingpermonthAfterYes = parseInt(savingpermonthslotsValue);
+    var priceSuggestionAfterYes = parseInt(priceSuggestionslotsValue);
     https.get(`https://duperga-179314.appspot.com/api/alexa/save?name=${itemAfterYes}&bank_saving=${currentsavingAfterYes}&current_saving=${savingpermonthAfterYes}&current_price=${priceAfterYes}&time_period=${timeperiodAfterYes}`);
+    speechOutput = 'Successfully saving my sweetheart';
+  }
+  callback(sessionAttributes,
+    buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+}
+
+function handleSavingSuggestion(intent, session, callback) {
+  const cardTitle = intent.name;
+  const sayYesSavingSlot = intent.slots.save_suggestion;
+  let repromptText = '';
+  let sessionAttributes = {};
+  const shouldEndSession = true;
+  let speechOutput = '';
+
+  if (!sayYesSavingSlot.value) {
+    speechOutput = 'Do you want to save it my dear?';
+    repromptText = 'Do you want to save it my dear?';
+  } else {
+    var priceAfterYes = parseInt(priceslotsValue);
+    var timeperiodAfterYes = parseInt(timeperiodslotsValue);
+    var itemAfterYes = `${itemperiodslotsValue} in ${placeslotsValue}`;
+    var currentsavingAfterYes = parseInt(currentsavingslotsValue);
+    var priceSuggestionAfterYes = parseInt(priceSuggestionslotsValue);
+
+    https.get(`https://duperga-179314.appspot.com/api/alexa/save?name=${itemAfterYes}&bank_saving=${currentsavingAfterYes}&current_saving=${priceSuggestionAfterYes}&current_price=${priceAfterYes}&time_period=${timeperiodAfterYes}`);
     speechOutput = 'Successfully saving my sweetheart';
   }
   callback(sessionAttributes,
@@ -209,10 +241,13 @@ function handleAutomatically(intent, session, callback) {
         var hasildataPredict = JSON.parse(_dataPredict);
         var time_predict = hasildataPredict.new_time;
         var tabungan_predict = hasildataPredict.new_saving;
-
-        var speechOutput = `I think you should save ${tabungan_predict} rupiah. Or you must wait ${time_predict} month,
-        if you insist with your current saving.`;
+        var pembulatan_tabungan_predict = pembulatan(tabungan_predict);
+        var speechOutput = `I think you should save ${pembulatan_tabungan_predict} rupiah. Or you must wait ${time_predict} month,
+        if you insist with your current saving.
+        Save it my dear?`;
         var reprompt = speechOutput;
+
+        priceSuggestionslotsValue = tabungan_predict;
 
         callback(sessionAttributes,
             buildSpeechletResponse(cardTitle, speechOutput, repromptText, false));
@@ -253,11 +288,13 @@ function handleSavingPerMonth(intent, session, callback) {
         var hasildataMonthly = JSON.parse(_dataMonthly);
         var future_saving_monthly = hasildataMonthly.total_saving;
         var future_price_monthly = hasildataMonthly.total_price;
+        var pembulatan_future_saving_monthly = pembulatan(future_saving_monthly);
+        var pembulatan_future_price_monthly = pembulatan(future_price_monthly);
         if (future_price_monthly <=  future_saving_monthly){
-          var speechOutput = `In the future, the price of this house will be ${future_price_monthly} rupiah and your money will be ${future_saving_monthly} rupiah.
+          var speechOutput = `In the future, the price of this house will be about ${pembulatan_future_price_monthly} rupiah and your money will be about ${pembulatan_future_saving_monthly} rupiah.
           Your budget is enough. You can buy it in the future. Do you want to save it honey?`;
         } else {
-          var speechOutput = `Your balance in the future will be ${future_saving_monthly} rupiah.
+          var speechOutput = `Your balance in the future will be about ${pembulatan_future_saving_monthly} rupiah.
           Your money still not enough. Try new saving?`;
         }
         savingpermonthslotsValue = savingpermonthSlot.value;
@@ -293,6 +330,21 @@ function randomPhrase(array) {
   var i = 0;
   i = Math.floor(Math.random() * array.length);
   return(array[i]);
+}
+
+function pembulatan(value) {
+  try {
+    var valstring = value.toString();
+    var vallength = valstring.length;
+    console.log('ini vallength', vallength);
+    var tigadigitdepan = valstring.slice(0,3);
+    var digitbelakang = (valstring.substr(3)).replace(/[0-9]/g, 0);
+    console.log('ini digit belakang', digitbelakang);
+    var hasilbaru = tigadigitdepan + digitbelakang;
+    return hasilbaru;
+  } catch(err) {
+    return value
+  }
 }
 
 function isSlotValid(request, slotName){
@@ -339,6 +391,8 @@ function onIntent(intentRequest, session, callback) {
       handleSavingToApi(intent, session, callback);
   } else if (intentName === 'no_for_automatically') {
       handleAutomatically(intent, session, callback);
+  } else if (intentName === 'yes_save_suggestion') {
+      handleSavingSuggestion(intent, session, callback);
   } else if (intentName === 'AMAZON.HelpIntent') {
       getWelcomeResponse(callback);
   } else if (intentName === 'AMAZON.StopIntent' || intentName === 'AMAZON.CancelIntent') {
