@@ -79,48 +79,51 @@ var predictAll = (req, res) => {
 }
 
 var getPredictSaving = (req, res) => {
+  //
+  //
+  // let totalInterest = 1 + Inflation.getConfig('bankInterest')
+  //
+  // let time = req.query.time_period
+  // let timeInYear = Math.ceil(time/12)
+  //
+  // let bankSaving
+  //
+  // if (time < 12) {
+  //   bankSaving = req.query.bank_saving
+  // } else {
+  //   bankSaving = Math.floor(req.query.bank_saving * Math.pow(totalInterest, timeInYear))
+  // }
 
-  // let inflation = 0.05
-  let bankInterest = 0.05
-  let houseInterest = 0.05
-  let totalInterest = 1 + bankInterest
-
-  let time = req.query.time_period
-  let year = new Date().getFullYear()
-  let timeInYear = Math.ceil(time/12)
-
-  let bankSaving
-
-  if (time < 12) {
-    bankSaving = req.query.bank_saving
-  } else {
-    bankSaving = Math.floor(req.query.bank_saving * Math.pow(totalInterest, timeInYear))
+  let current_price = Inflation.getCurrentPrice()
+  // let current_price = req.query.current_price
+  Inflation.predictSaving(current_price, time, cb){
+    cb(success, data){
+      if(success) res.send(data)
+      console.log(data)
+    }
   }
-
-  let current_price = req.query.current_price
-
-  Inflation.findOne({year: year})
-  .then(({inflation}) => {
-    inflation = inflation / 100
-
-    let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
-
-    try {
-      var toAlexa = {
-        bank_saving: bankSaving,
-        total_price: predicted_price[predicted_price.length - 1].price
-      }
-    }
-    catch (err) {
-      console.log(err)
-      var toAlexa= {
-        bank_saving: null,
-        total_price: null
-      }
-    }
-    res.send(toAlexa)
-  })
-  .catch(err => console.log(err))
+  // Inflation.findOne({year: year})
+  // .then(({inflation}) => {
+  //   inflation = inflation / 100
+  //
+  //   let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
+  //
+  //   try {
+  //     var toAlexa = {
+  //       bank_saving: bankSaving,
+  //       total_price: predicted_price[predicted_price.length - 1].price
+  //     }
+  //   }
+  //   catch (err) {
+  //     console.log(err)
+  //     var toAlexa= {
+  //       bank_saving: null,
+  //       total_price: null
+  //     }
+  //   }
+  //   res.send(toAlexa)
+  // })
+  // .catch(err => console.log(err))
 
 }
 
@@ -262,7 +265,7 @@ var searchPrice = (req, res) => {
     citySentence[i] = word.join('')
   }
   citySentence = citySentence.join('+')
-  
+
   var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=${citySentence}&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
   var regxJuta = /\s?juta/i
   var regxMiliar = /\s?miliar/i
