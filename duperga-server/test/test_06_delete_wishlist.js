@@ -60,36 +60,6 @@ describe('DELETE /wishlist/:wishlistID', () => {
     ]
   }
 
-  // before(done => {
-  //   axios.post('/register', {
-  //     email: `testing@gmail.com`,
-  //     password: `testing`
-  //   })
-  //   .then(resp => {
-  //     userID = resp.data._id
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.should.not.exist
-  //     done()
-  //   })
-  // })
-  //
-  // before(done => {
-  //   axios.post('/login', {
-  //     email: `testing@gmail.com`,
-  //     password: `testing`
-  //   })
-  //   .then(resp => {
-  //     token = resp.data.token
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.should.not.exist
-  //     done()
-  //   })
-  // })
-
   beforeEach(done => {
     newWishlist.userID = userID
     axios.post('/wishlist', newWishlist)
@@ -103,17 +73,6 @@ describe('DELETE /wishlist/:wishlistID', () => {
       done()
     })
   })
-
-  // after (done => {
-  //   axios.delete(`/users/${userID}`)
-  //   .then(resp => {
-  //     console.log(`deleted`)
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     done()
-  //   })
-  // })
 
   it(`wishlist deleted one data`, (done) => {
     axios.delete(`/wishlist/${wishlistID}`)

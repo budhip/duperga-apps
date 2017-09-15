@@ -7,40 +7,6 @@ var should = chai.should()
 describe('GET /wishlist', () => {
   let token
   let userID
-  // let userLogin = {
-  //   email: 'fajar@gmail.com',
-  //   password: 'fajar'
-  // }
-
-  // before(done => {
-  //   axios.post('/register', {
-  //     email: `testing@gmail.com`,
-  //     password: `testing`
-  //   })
-  //   .then(resp => {
-  //     userID = resp.data._id
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.should.not.exist
-  //     done()
-  //   })
-  // })
-  //
-  // before(done => {
-  //   axios.post('/login', {
-  //     email: `testing@gmail.com`,
-  //     password: `testing`
-  //   })
-  //   .then(resp => {
-  //     token = resp.data.token
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.should.not.exist
-  //     done()
-  //   })
-  // })
 
   before(done => {
     axios.post('/wishlist/seed')
@@ -56,11 +22,11 @@ describe('GET /wishlist', () => {
   after(done => {
     axios.delete(`/wishlist/clear`)
     .then(resp => {
-      console.log(`deleted`)
+      // console.log(`deleted all wishlist`)
       done()
     })
     .catch(err => {
-      console.log('error')
+      // console.log('error')
       done()
     })
   })
@@ -89,10 +55,11 @@ describe('GET /wishlist', () => {
     })
   })
 
-  it(`second data name should be 'Rumah di Pakubuwono'`, (done) => {
+  it(`first data name should equal to 'Honda Jazz'`, (done) => {
     axios.get(`/wishlist`)
     .then((resp) => {
-      resp.data[1].name.should.equal('Rumah di Pakubuwono')
+      let itemName = resp.data[0].name      
+      itemName.should.equal('Honda Jazz')
       done()
     })
     .catch(err => {
@@ -101,10 +68,11 @@ describe('GET /wishlist', () => {
     })
   })
 
-  it(`first data name should equal to 'Honda Jazz'`, (done) => {
+  it(`second data name should be 'Rumah di Pakubuwono'`, (done) => {
     axios.get(`/wishlist`)
     .then((resp) => {
-      resp.data[0].name.should.equal('Honda Jazz')
+      let itemName = resp.data[1].name
+      itemName.should.equal('Rumah di Pakubuwono')
       done()
     })
     .catch(err => {
@@ -189,36 +157,6 @@ describe('GET /wishlist/:wishlistID', () => {
     ]
   }
 
-  // before(done => {
-  //   axios.post('/register', {
-  //     email: `testing@gmail.com`,
-  //     password: `testing`
-  //   })
-  //   .then(resp => {
-  //     userID = resp.data._id
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.should.not.exist
-  //     done()
-  //   })
-  // })
-  //
-  // before(done => {
-  //   axios.post('/login', {
-  //     email: `testing@gmail.com`,
-  //     password: `testing`
-  //   })
-  //   .then(resp => {
-  //     token = resp.data.token
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.should.not.exist
-  //     done()
-  //   })
-  // })
-
   before(done => {
     axios.post(`/wishlist`, newWishlist)
     .then(created => {
@@ -243,7 +181,6 @@ describe('GET /wishlist/:wishlistID', () => {
   })
 
   it(`Should be an object and have _id property`, done => {
-    console.log(wishlistID)
     axios.get(`/wishlist/${wishlistID}`)
     .then(resp => {
       resp.data.should.have.property('_id')
@@ -256,7 +193,7 @@ describe('GET /wishlist/:wishlistID', () => {
     })
   })
 
-  it(`Should not an array`, done => {
+  it(`all respon Should not an array`, done => {
     axios.get(`/wishlist/${wishlistID}`)
     .then(resp => {
       resp.data.should.not.be.an('array')
@@ -268,10 +205,10 @@ describe('GET /wishlist/:wishlistID', () => {
     })
   })
 
-  it(`Should not an array`, done => {
+  it(`property predicted_budget Should an array`, done => {
     axios.get(`/wishlist/${wishlistID}`)
     .then(resp => {
-      resp.data.should.not.be.an('array')
+      resp.data.predicted_price.should.be.an('array')
       done()
     })
     .catch(err => {

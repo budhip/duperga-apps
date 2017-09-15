@@ -92,7 +92,7 @@ var getPredictSaving = (req, res) => {
   let bankSaving
 
   if (time < 12) {
-    bankSaving = req.query.bank_saving
+    bankSaving = parseInt(req.query.bank_saving)
   } else {
     bankSaving = Math.floor(req.query.bank_saving * Math.pow(totalInterest, timeInYear))
   }
@@ -104,11 +104,12 @@ var getPredictSaving = (req, res) => {
     inflation = inflation / 100
 
     let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
+    let lastPrice = parseInt(predicted_price[predicted_price.length - 1].price)
 
     try {
       var toAlexa = {
         bank_saving: bankSaving,
-        total_price: predicted_price[predicted_price.length - 1].price
+        total_price: lastPrice
       }
     }
     catch (err) {
@@ -118,6 +119,8 @@ var getPredictSaving = (req, res) => {
         total_price: null
       }
     }
+    // console(`------------ type bank saving`)
+    console.log(`-----------------${typeof lastPrice}`)
     res.send(toAlexa)
   })
   .catch(err => console.log(err))
@@ -128,10 +131,10 @@ var getPredictMonthly = (req, res) => {
   let bankInterest = 0.05
   let houseInterest = 0.05
   let year = new Date().getFullYear()
-  let saving = req.query.current_saving
-  let current_price = req.query.current_price
-  let bankSaving = req.query.bank_saving
-  let time = req.query.time_period
+  let saving = parseInt(req.query.current_saving)
+  let current_price = parseInt(req.query.current_price)
+  let bankSaving = parseInt(req.query.bank_saving)
+  let time = parseInt(req.query.time_period)
 
   Inflation.findOne({ year: year })
   .then(({inflation}) => {
@@ -262,7 +265,7 @@ var searchPrice = (req, res) => {
     citySentence[i] = word.join('')
   }
   citySentence = citySentence.join('+')
-  
+
   var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=${citySentence}&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
   var regxJuta = /\s?juta/i
   var regxMiliar = /\s?miliar/i

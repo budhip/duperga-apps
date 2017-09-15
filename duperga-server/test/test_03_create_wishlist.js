@@ -103,44 +103,16 @@ describe('POST /wishlist', () => {
     password: 'test1'
   }
 
-  // register user
-  // before(done => {
-  //   axios.post('/users/register', testUser)
-  //   .then(resp => {
-  //     userID = resp.data._id
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.response.data.status.should.not.equal(404)
-  //     done()
-  //   })
-  // })
-
-  // login user
-  // before(done => {
-  //   axios.post('/users/login', testUserLogin)
-  //   .then(resp => {
-  //     token = resp.data.token
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     console.log(err.response.data.status)
-  //     done()
-  //   })
-  // })
-
   // clear all created wishlist
-  // afterEach(done => {
-  //   axios.delete('/wishlist/clear')
-  //   .then(resp => {
-  //     console.log(resp.data)
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     console.log(err.message)
-  //     done()
-  //   })
-  // })
+  afterEach(done => {
+    axios.delete('/wishlist/clear')
+    .then(resp => {
+      done()
+    })
+    .catch(err => {
+      done()
+    })
+  })
 
   // clear all registered user
   after(done => {
@@ -221,7 +193,7 @@ describe('POST /wishlist', () => {
   it(`current_price should be a number`, (done) => {
     // newWishlist.userID = userID
     axios.post(`/wishlist`, newWishlist)
-    .then((resp) => {      
+    .then((resp) => {
       resp.data.current_price.should.be.an('number')
       done()
     })
@@ -243,19 +215,5 @@ describe('POST /wishlist', () => {
       done()
     })
   })
-
-  // it(`response should 'you must login first' with no token`, (done) => {
-  //   newWishlist.userID = userID
-  //   axios.post(`/wishlistss`, newWishlist)
-  //   .then((resp) => {
-  //     resp.data.should.not.exist
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.response.data.status.should.equal(500)
-  //     err.response.data.message.should.equal('you must login first')
-  //     done()
-  //   })
-  // })
 
 })

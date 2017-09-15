@@ -58,18 +58,6 @@ describe('PUT /wishlist/:wishlistID', () => {
     ]
   }
 
-  // login first
-  // before(done => {
-  //   axios.post(`/login`, userLogin)
-  //   .then((resp) => {
-  //     token = resp.data.token
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.response.data.status.should.not.equal(404)
-  //     done()
-  //   })
-  // })
 
   // create wishlist
   before(done => {
@@ -165,20 +153,5 @@ describe('PUT /wishlist/:wishlistID', () => {
       done()
     })
   })
-
-  // it(`response should return 'you are not authorized' when update because of wrong token`, done => {
-  //   axios.put(`/wishlist/${wishlistID}`, {
-  //     name: 'honda vario'
-  //   })
-  //   .then((resp) => {
-  //     resp.data.should.not.exist
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.response.data.status.should.equal(500)
-  //     err.response.data.message.should.equal('you are not authorized')
-  //     done()
-  //   })
-  // })
 
 })

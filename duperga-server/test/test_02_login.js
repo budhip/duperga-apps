@@ -80,16 +80,4 @@ describe('POST /users/login', () => {
     })
   })
 
-  // it(`Response should have status 404`, (done) => {
-  //   axios.post(`/users/loginsss`)
-  //   .then(({ data }) => {
-  //     data.should.equal(null)
-  //     done()
-  //   })
-  //   .catch(err => {
-  //     err.response.data.status.should.equal(404)
-  //     done()
-  //   })
-  // })
-
 })

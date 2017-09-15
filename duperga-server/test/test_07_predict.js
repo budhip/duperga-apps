@@ -3,7 +3,7 @@ var chai = require('chai')
 var should = chai.should()
 var axios = require('./axios_config')
 
-describe(`POST /predictions > TensorFlow endPoint`, () => {
+describe(`POST /predictions`, () => {
 
   let newWishlist = {
     name: 'Rumah di Pakubuwono',
