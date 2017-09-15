@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
+import moment from 'moment';
+import Moment from 'react-moment';
+import 'moment-timezone';
+import 'moment/locale/id';
 
-import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
 const CustomizedAxisTick = React.createClass({
@@ -21,7 +24,7 @@ const CustomizedYAxisTick = React.createClass({
     const {x, y, payload} = this.props;
    	return (
     	<g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor="end" fill="#666" >{(payload.value/1000).toLocaleString()}k</text>
+        <text x={0} y={0} dy={16} textAnchor="end" fill="#666" >{(payload.value/1000).toLocaleString()}</text>
       </g>
     );
   }
@@ -43,9 +46,9 @@ const CustomTooltip  = React.createClass({
           color: "white",
           borderRadius: "10px"
         }}>
-          <p>current saving Rp. {payload[0].payload.saving.toLocaleString()}</p>
-          <p>current price Rp. {payload[0].payload.price.toLocaleString()}</p>
-          <p>Month: {payload[0].payload.month}</p>
+          <p style={{marginBottom: "3px"}}>current saving Rp. {payload[0].payload.saving.toLocaleString()}</p>
+          <p style={{marginBottom: "3px"}}>current price Rp. {payload[0].payload.price.toLocaleString()}</p>
+          <p style={{marginBottom: "2px"}}>Month: {payload[0].payload.month}</p>
         </div>
       );
     }
@@ -66,14 +69,14 @@ export default class Detail extends Component {
       predicted_price: props.location.state.detailData.predicted_price,
       createdAt: props.location.state.detailData.createdAt,
       updatedAt: props.location.state.detailData.updatedAt,
-      dataFilter: props.location.state.detailData.dataFilter
+      dataFilter: props.location.state.detailData.dataFilter,
+      canBuyHouse: props.location.state.detailData.canBuyHouse
     }
   }
   
   render(){
     return(
       <div>
-      <Navbar />
       <Sidebar />
         <div className="dashboard-content">
           <div className="row">
@@ -87,12 +90,28 @@ export default class Detail extends Component {
                 
                 <div className="add-listing-section">
                   <div className="add-listing-headline">
-                    <h3>{this.state.name}</h3>
-                    <p style={{marginBottom: "5px"}}>Current Price: <b>Rp. {this.state.current_price.toLocaleString()}</b></p>
+                    <h3 style={{fontStyle: "italic"}}>{this.state.name}</h3>
+                    <p style={{marginBottom: "15px", fontSize:"14px"}}><Moment locale='id' format="LLLL">{ this.state.createdAt }</Moment></p>
+                    <p style={{marginBottom: "5px"}}>House Price: <b>Rp. {this.state.current_price.toLocaleString()}</b></p>
                   </div>
-                  <p style={{marginBottom: "5px"}}>Your Current Budget: <b>Rp. {this.state.current_saving.toLocaleString()}</b></p>
-                  <p style={{marginBottom: "5px"}}>Your Current Bank Saving: <b>Rp. {this.state.bank_saving.toLocaleString()}</b></p>
-                  <p style={{marginBottom: "5px"}}>You want Buy In: <b>{this.state.time_period} Month Later</b></p>
+                  <table>
+                    <tr>
+                      <td><p style={{margin: "0 10px 3px 0"}}>Allocated Money per month: </p></td>
+                      <td><b>Rp. {this.state.current_saving.toLocaleString()}</b></td>
+                    </tr>
+                    <tr>
+                      <td><p style={{margin: "0 10px 3px 0"}}>Initial Balance: </p></td>
+                      <td><b>Rp. {this.state.bank_saving.toLocaleString()}</b></td>
+                    </tr>
+                    <tr>
+                      <td><p style={{margin: "0 10px 3px 0"}}>Time Period: </p></td>
+                      <td><b>{this.state.time_period} Month</b></td>
+                    </tr>
+                  </table>
+                  
+                  <p style={{marginBottom: "5px"}}>You can buy this house on <b><u>{this.state.canBuyHouse[0].month} {this.state.canBuyHouse[0].year}</u></b></p>
+                  <p style={{marginBottom: "5px"}}>House Price will be <b><u>Rp.{this.state.canBuyHouse[0].price.toLocaleString()}</u></b> on <b><u>{this.state.canBuyHouse[0].month} {this.state.canBuyHouse[0].year}</u></b></p>
+                  <p style={{marginBottom: "5px"}}>And Your money will be <b><u>Rp.{this.state.canBuyHouse[0].saving.toLocaleString()}</u></b> on <b><u>{this.state.canBuyHouse[0].month} {this.state.canBuyHouse[0].year}</u></b></p>
                   
                   
                 </div>
@@ -117,7 +136,7 @@ export default class Detail extends Component {
                    <Line type="monotone" dataKey="price" stroke="#82ca9d" activeDot={{r: 8}} label="ajcsj"/>
                    
                   </LineChart>
-                  <Link className="button gray" to="/ListItem">Back</Link>
+                  <Link className="button gray" to="/list-item" style={{backgroundColor: "rgba(52, 152, 219,1.0)"}}>Back</Link>
                 </div>
               </div>
             </div>

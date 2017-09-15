@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
+import * as firebase from 'firebase';
+import moment from 'moment';
+import Moment from 'react-moment';
+import 'moment-timezone';
+import 'moment/locale/id';
 
-import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 import {dbGet} from '../actions';
 
@@ -58,15 +62,19 @@ class LatestItem extends Component {
   
   componentWillMount(){
     this.props.allListData()
+    const rootRef = firebase.database().ref('duperga');
+    rootRef.on('value', snap => {
+      this.props.allListData()
+    })
   }
   
   render(){
-    let latestData = this.props.list[this.props.list.length - 1]
+    let latestData = this.props.list[0]
     
     if (latestData) {    
     return(
       <div>
-        <Navbar />
+        
         <Sidebar />
         <div className="dashboard-content">
           <div className="row">
@@ -79,12 +87,29 @@ class LatestItem extends Component {
               <div id="add-listing">
                 <div className="add-listing-section">
                   <div className="add-listing-headline">
-                    <h3>{latestData.name}</h3>
-                    <p style={{marginBottom: "5px"}}>Current Price: <b>Rp. {latestData.current_price.toLocaleString()}</b></p>
+                    <h3 style={{fontStyle: "italic"}}>{latestData.name}</h3>
+                    <p style={{marginBottom: "15px", fontSize:"14px"}}><Moment locale='id' format="LLLL">{ latestData.createdAt }</Moment></p>
+                    <p style={{marginBottom: "5px"}}>House Price: <b>Rp. {latestData.current_price.toLocaleString()}</b></p>
                   </div>
-                  <p style={{marginBottom: "5px"}}>Your Current Budget: <b>Rp. {latestData.current_saving.toLocaleString()}</b></p>
-                  <p style={{marginBottom: "5px"}}>Your Current Bank Saving: <b>Rp. {latestData.bank_saving.toLocaleString()}</b></p>
-                  <p style={{marginBottom: "5px"}}>You want Buy In: <b>{latestData.time_period} Month Later</b></p>
+                  <table>
+                    <tr>
+                      <td><p style={{margin: "0 10px 3px 0"}}>Allocated Money per month: </p></td>
+                      <td><b>Rp. {latestData.current_saving.toLocaleString()}</b></td>
+                    </tr>
+                    <tr>
+                      <td><p style={{margin: "0 10px 3px 0"}}>Initial Balance: </p></td>
+                      <td><b>Rp. {latestData.bank_saving.toLocaleString()}</b></td>
+                    </tr>
+                    <tr>
+                      <td><p style={{margin: "0 10px 3px 0"}}>Time Period: </p></td>
+                      <td><b>{latestData.time_period} Month</b></td>
+                    </tr>
+                  </table>
+                  
+                  <p style={{marginBottom: "5px"}}>You can buy this house on <b><u>{latestData.canBuyHouse[0].month} {latestData.canBuyHouse[0].year}</u></b> ,</p>
+                  <p style={{marginBottom: "5px"}}>House Price will be <b><u>Rp.{latestData.canBuyHouse[0].price.toLocaleString()}</u></b> on <b><u>{latestData.canBuyHouse[0].month} {latestData.canBuyHouse[0].year}</u></b> ,</p>
+                  <p style={{marginBottom: "5px"}}>And Your money will be <b><u>Rp.{latestData.canBuyHouse[0].saving.toLocaleString()}</u></b> on <b><u>{latestData.canBuyHouse[0].month} {latestData.canBuyHouse[0].year}</u></b></p>
+                  
                 </div>
               </div>
             </div>

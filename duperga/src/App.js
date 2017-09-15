@@ -8,8 +8,6 @@ import Welcome from './components/Welcome'
 import ListItem from './components/ListItem'
 import Detail from './components/Detail'
 import LatestItem from './components/LatestItem'
-import Profile from './components/Profile'
-
 
 class App extends Component {
   render() {
@@ -19,9 +17,8 @@ class App extends Component {
           <div className="App">
             <div>              
               <Route exact path ="/" component={Welcome} />
-              <Route exact path="/Home" component={LatestItem} />
-              <Route exact path="/ListItem" component={ListItem} />
-              <Route exact path="/Profile" component={Profile} />
+              <Route exact path="/home" component={LatestItem} />
+              <Route exact path="/list-item" component={ListItem} />
               <Route exact path="/detail/:id" component={Detail} />
             </div>
             

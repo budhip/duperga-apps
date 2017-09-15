@@ -21,7 +21,7 @@ export default class Login extends Component {
           </p>
           <div className="form-row">
             <Link className="button border margin-top-5" style={{textAlign: "center"}} to={{
-              pathname: `/Home`}}><b>Login</b></Link>
+              pathname: `/home`}}><b>Login</b></Link>
           </div>
         </form>
       </div>

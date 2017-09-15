@@ -27,21 +27,30 @@ export const dbGet = () => {
         var dataFilter = []
         var objBudget = {}
         listData.predicted_budget.forEach(dataBudget => {
-          let c = listData.predicted_price.filter(a => {
+          let dataPrice = listData.predicted_price.filter(a => {
             return a.year === dataBudget.year
           })
           objBudget = {
             month: dataBudget.month,
             saving: dataBudget.saving,
             year: dataBudget.year,
-            price: c[0].price
+            price: dataPrice[0].price
           }
           dataFilter.push(objBudget)
         })
-        const newData = {...listData, dataFilter: dataFilter}
+      
+        const canBuyHouse = dataFilter.filter((monthData) => monthData.saving >= monthData.price)
+        // console.log('udah mulai bisa beli rumah nih ', canBuyHouse)
+
+        const newData = {...listData, dataFilter: dataFilter, canBuyHouse}
         newDataFilter.push(newData)
       })
-
+      
+      newDataFilter.forEach(data => {
+        data.name = data.name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})
+      })
+            
+      console.log('=============================ini newDataFilter',newDataFilter);
       dispatch(getData(newDataFilter))
     })
     .catch(err => console.log(err))
@@ -68,7 +77,10 @@ export const dbSearch = (keyword) => {
           }
           dataFilter.push(objBudget)
         })
-        const newData = {...listData, dataFilter: dataFilter}
+        const canBuyHouse = dataFilter.filter((monthData) => monthData.saving >= monthData.price)
+        // console.log('udah mulai bisa beli rumah nih ', canBuyHouse)
+
+        const newData = {...listData, dataFilter: dataFilter, canBuyHouse}
         newDataFilter.push(newData)
       })
 

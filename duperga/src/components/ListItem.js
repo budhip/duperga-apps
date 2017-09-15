@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
+import Moment from 'react-moment';
+import 'moment-timezone';
+import 'moment/locale/id';
 
 import {dbGet, dbSearch, dbDelete} from '../actions'
-import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
 class ListItem extends Component {
@@ -26,10 +29,10 @@ class ListItem extends Component {
     // console.log('===================', this.props.list);
     return(
       <div>
-      <Navbar />
+      
       <Sidebar />
         <div className="container-fluid">  
-          <div className="col-md-offset-2 col-md-9" style={{marginLeft: "280px"}}>
+          <div className="col-md-offset-2 col-md-9" style={{margin: "50px 0 0 280px"}}>
             <div className="row">
               <div style={{marginLeft: "15px"}}>
                 <input style={{width: '350px', textAlign: 'center'}} onChange={(e) => this.handleInput(e.target.value)} type="text" className="form-control" placeholder="Search Your Items Here" />
@@ -45,18 +48,19 @@ class ListItem extends Component {
                     <div className="list-box-listing">
                       <div className="list-box-listing-content">
                         <div className="inner">
-                          <h2 style={{marginTop: "10px"}}>{data.name}</h2>
-                          <p style={{marginBottom: "5px"}}>Current Saving: <b>Rp. {data.current_saving.toLocaleString()}</b></p>
-                          <p style={{marginBottom: "5px"}}>Current Price: <b>Rp. {data.current_price.toLocaleString()}</b></p>
-                          <p>Time Period: <b>{data.time_period}</b></p>
+                          <h2 style={{margin: "10px 0 5px 0", fontStyle: "italic"}}>{data.name}</h2>
+                          <p style={{marginBottom: "15px", fontSize:"14px"}}><Moment locale='id' format="LLLL">{ data.createdAt }</Moment></p>
+                          <p style={{marginBottom: "5px"}}>Allocated Money per month:  <b>Rp. {data.current_saving.toLocaleString()}</b></p>
+                          <p style={{marginBottom: "5px"}}>House Price: <b>Rp. {data.current_price.toLocaleString()}</b></p>
+                          <p>Time Period: <b>{data.time_period}</b> month</p>
                         </div>
                       </div>
                     </div>
                     <div className="buttons-to-right">
-                      <button className="button gray" style={{marginRight: '10px'}}><Link to={{
+                      <button className="button" style={{marginRight: '10px', backgroundColor: "rgba(52, 152, 219,1.0)"}}><Link to={{
                         pathname: `/detail/${data._id}`,
-                        state: {detailData: data} }}><i className="sl sl-icon-info" />Detail</Link></button>
-                      <button className="button gray" onClick={() => this.props.delete(data._id)} >Delete</button>
+                        state: {detailData: data} }} style={{color: "white"}}><i className="sl sl-icon-info" />Detail</Link></button>
+                      <button className="button" onClick={() => this.props.delete(data._id)} ><i className="sl sl-icon-trash" />Delete</button>
                     </div>
                   </li>)
                 })}
