@@ -1,42 +1,29 @@
 import React, {Component} from 'react';
-import imgUrl from './logo1.jpg';
-
-const background ={
-  height: '675px',
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'center',
-  backgroundSize: 'cover',
-  backgroundImage: 'url(' + imgUrl + ')'
-};
+import { Link } from 'react-router-dom';
 
 export default class Login extends Component {
   
-  
   render(){
     return(
-      <div style={background}>
-        <div className="container">
-          <div className="row justify-content-md-center">
-            <div className="col-md-4 col-lg-offset-4">
-              <form className="form" style={{marginTop: '200px'}}>
-                <fieldset>
-                  <legend style={{textAlign: 'center'}}>Login Form</legend>
-                  <div className="form-group">
-                  <label className="col-lg-2 control-label">Username</label>            
-                  <input name="username" type="text" className="form-control" style={{backgroundColor: "rgba(189, 195, 199,0.5)"}}/>
-                  </div>
-                  <div className="form-group">
-                  <label className="col-lg-2 control-label">Password</label>            
-                  <input name="password" type="password" className="form-control" style={{backgroundColor: "rgba(189, 195, 199,0.5)"}} />
-                  </div>
-                  <div className="form-group">
-                  <button type="submit" className="btn btn-success">Login</button>
-                  </div>
-                </fieldset>
-              </form>          
-            </div>
-          </div> 
-        </div>
+      <div className="tab-content" id="tab1" style={{display: 'none'}}>
+        <form method="post" className="login">
+          <p className="form-row form-row-wide">
+            <label htmlFor="email">Email:
+              <i className="im im-icon-Mail" />
+              <input type="text" className="input-text" name="email" id="email" />
+            </label>
+          </p>
+          <p className="form-row form-row-wide">
+            <label htmlFor="password">Password:
+              <i className="im im-icon-Lock-2" />
+              <input className="input-text" type="password" name="password" id="password" />
+            </label>
+          </p>
+          <div className="form-row">
+            <Link className="button border margin-top-5" style={{textAlign: "center"}} to={{
+              pathname: `/home`}}><b>Login</b></Link>
+          </div>
+        </form>
       </div>
     
     )

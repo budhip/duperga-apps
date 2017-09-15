@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'
 
 export default class Sidebar extends Component {
   render(){
@@ -7,17 +7,17 @@ export default class Sidebar extends Component {
       <div id="dashboard">
         <div className="dashboard-nav">
           <div className="dashboard-nav-inner">
-            <ul data-submenu-title="Main">
-              <li className="active">
-                <Link to="/"><i className="sl sl-icon-settings" /> Dashboard</Link>
+            <ul data-submenu-title="Duperga">
+              <li>
+                <NavLink to="/home" activeStyle={{backgroundColor: "rgba(149, 165, 166,0.3)",fontWeight: 'bold'}}>
+                <i className="sl sl-icon-eye" /> Latest Item</NavLink>
               </li>
               <li>
-                <Link to="/ListItem"><i className="sl sl-icon-layers" /> Wishlist <span className="nav-tag messages">2</span></Link>
+                <NavLink to="/list-item" activeStyle={{backgroundColor: "rgba(149, 165, 166,0.3)",fontWeight: 'bold'}}><i className="sl sl-icon-layers" /> Wishlist</NavLink>
               </li>
-            </ul>
-            <ul data-submenu-title="Account">
-              <li><a href="dashboard-my-profile.html"><i className="sl sl-icon-user" /> My Profile</a></li>
-              <li><a href="index.html"><i className="sl sl-icon-power" /> Logout</a></li>
+              <li>
+                <NavLink to="/"><i className="sl sl-icon-power" /> Logout</NavLink>
+              </li>
             </ul>
           </div>
         </div>
