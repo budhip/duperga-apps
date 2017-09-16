@@ -5,13 +5,14 @@ Duperga ( Dukun Peramal Harga) is an intellegent assistant which can predict hou
 # ATTENTION !!
 You need an amazon alexa and an amazon web service account to use this code [Buy Alexa](https://www.amazon.com/dp/B01DFKC2SO/ref=fs_ods_fs_aucc_bt)
 
-## End Point Documentation
-
-[End Points in Backend](http://duperga-docs-api.s3-website-us-west-2.amazonaws.com/)
-
 ## Website
 
 [Alexa Web Interface](http://duperga.tk/home)
+
+## End Point Documentation
+
+[End Points in Back-end](http://duperga-docs-api.s3-website-us-west-2.amazonaws.com/)
+
 
 ## Contributor
 
