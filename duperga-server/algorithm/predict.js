@@ -7,7 +7,7 @@ function calculateBudget (monthly_saving, interest, time, bank_saving) {
   for (let i = 0; i < time; i++) {
     bank_saving += monthly_saving
     // 0.082 = 30 / 365
-    let newSaving = (bank_saving * interest * 0.082) + bank_saving
+    let newSaving = Math.floor((bank_saving * interest * 0.082) + bank_saving)
     monthly_saving_hist.push(newSaving)
   }
   return monthly_saving_hist

@@ -5,6 +5,27 @@ var Inflation = require('../models/inflation')
 var algorithm = require('../algorithm/predict')
 var axios = require('axios')
 const cheerio = require('cheerio')
+var firebase = require('firebase')
+
+var config = {
+  apiKey: "AIzaSyCcfYVFV31_UnKJfBL24uawHGKz_Z26sFE",
+  authDomain: "awesome-presentation.firebaseapp.com",
+  databaseURL: "https://awesome-presentation.firebaseio.com",
+  projectId: "awesome-presentation",
+  storageBucket: "awesome-presentation.appspot.com",
+  messagingSenderId: "1021392727967"
+};
+
+firebase.initializeApp(config);
+
+var database = firebase.database()
+
+var updateFlag = () => {
+  let date = new Date().toString()
+  database.ref('duperga').set({
+    date: date
+  })
+}
 
 var predictAll = (req, res) => {
 
@@ -68,7 +89,14 @@ var getPredictSaving = (req, res) => {
   let year = new Date().getFullYear()
   let timeInYear = Math.ceil(time/12)
 
-  let bankSaving = Math.floor(req.query.bank_saving * Math.pow(totalInterest, timeInYear))
+  let bankSaving
+
+  if (time < 12) {
+    bankSaving = parseInt(req.query.bank_saving)
+  } else {
+    bankSaving = Math.floor(req.query.bank_saving * Math.pow(totalInterest, timeInYear))
+  }
+
   let current_price = req.query.current_price
 
   Inflation.findOne({year: year})
@@ -76,11 +104,12 @@ var getPredictSaving = (req, res) => {
     inflation = inflation / 100
 
     let predicted_price = algorithm.predictPrice(current_price, houseInterest, inflation, time)
+    let lastPrice = parseInt(predicted_price[predicted_price.length - 1].price)
 
     try {
       var toAlexa = {
         bank_saving: bankSaving,
-        total_price: predicted_price[predicted_price.length - 1].price
+        total_price: lastPrice
       }
     }
     catch (err) {
@@ -90,6 +119,8 @@ var getPredictSaving = (req, res) => {
         total_price: null
       }
     }
+    // console(`------------ type bank saving`)
+    console.log(`-----------------${typeof lastPrice}`)
     res.send(toAlexa)
   })
   .catch(err => console.log(err))
@@ -99,13 +130,11 @@ var getPredictSaving = (req, res) => {
 var getPredictMonthly = (req, res) => {
   let bankInterest = 0.05
   let houseInterest = 0.05
-  // let inflation = 0.05
   let year = new Date().getFullYear()
-  // let inflation = await getInflation(year)
-  let saving = req.query.current_saving
-  let current_price = req.query.current_price
-  let bankSaving = req.query.bank_saving
-  let time = req.query.time_period
+  let saving = parseInt(req.query.current_saving)
+  let current_price = parseInt(req.query.current_price)
+  let bankSaving = parseInt(req.query.bank_saving)
+  let time = parseInt(req.query.time_period)
 
   Inflation.findOne({ year: year })
   .then(({inflation}) => {
@@ -127,7 +156,7 @@ var getPredictMonthly = (req, res) => {
     }
 
     catch (err) {
-      console.log()
+      console.log(err)
       var toAlexa = {
         total_saving: null,
         last_month_saving: null,
@@ -195,6 +224,7 @@ var getSave = (req, res) => {
     newWish.save()
     .then(wish => {
       res.send(wish)
+      updateFlag()
     })
     .catch(err => {
       res.status(500).send(err)
@@ -214,7 +244,6 @@ var getPredictNewSaving = (req, res) => {
 
   Inflation.findOne({year: year})
   .then(({inflation}) => {
-
     inflation = inflation / 100
     try {
       var newSaving = algorithm.predictNewSaving(current_price, bank_saving, monthly_saving, time_period, inflation)
@@ -228,7 +257,16 @@ var getPredictNewSaving = (req, res) => {
 }
 
 var searchPrice = (req, res) => {
-  var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=Bandung&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
+  let city = req.query.name
+  let citySentence = req.query.name.split(' ')
+  for(let i = 0; i < citySentence.length; i++) {
+    let word = citySentence[i].split('')
+    word[0] = word[0].toUpperCase()
+    citySentence[i] = word.join('')
+  }
+  citySentence = citySentence.join('+')
+
+  var url = `http://rumahdijual.com/carirumah.php?transaksi=BELI&jenis=RUMAH&kota=${citySentence}&minprice=&maxprice=500000000&ltmin=0&ktmin=0&q=&sort=0`
   var regxJuta = /\s?juta/i
   var regxMiliar = /\s?miliar/i
 
